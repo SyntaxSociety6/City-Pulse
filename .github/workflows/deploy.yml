@@ -32,16 +32,18 @@ jobs:
           node-version: 20
           cache: npm
 
-      - name: Install dependencies
+      - name: Install dependencies (web)
+        working-directory: backend/maps/web
         run: npm ci
 
-      - name: Build
+      - name: Build (web)
+        working-directory: backend/maps/web
         run: npm run build
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: public
+          path: backend/maps/web/dist
 
   deploy:
     environment:

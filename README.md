@@ -14,30 +14,21 @@ A comprehensive platform for monitoring urban development, traffic patterns, and
 
 ```
 citypulse-urban-growth-tracker/
-├── public/                    # 🚀 GitHub Pages Frontend (Static Files)
-│   ├── index.html            # Main entry point
-│   ├── *.html                # All HTML pages
-│   ├── *.css                 # Stylesheets
-│   ├── *.js                  # JavaScript files
-│   └── assets/               # Images, videos, and media files
+├── backend/                   # 🔧 Backend + Frontend projects
+│   ├── maps/
+│   │   ├── web/              # 🚀 Vite + React app (deployed to GitHub Pages)
+│   │   │   ├── src/
+│   │   │   └── dist/         # Build output published by Pages workflow
+│   │   ├── server/           # Map-related API (Express)
+│   │   └── mobile/           # Expo React Native app
+│   └── server/               # Core API (Express)
 │
-├── backend/                   # 🔧 Backend Server
-│   ├── server.js             # Main Express server
-│   └── server/               # User authentication server
-│       ├── index.js          # User routes and logic
-│       └── package.json      # Backend dependencies
-│
-├── src/                      # 📁 Source code organization (for future React migration)
-│   ├── components/           # Reusable UI components
-│   ├── pages/                # Page components
-│   └── services/             # API and service functions
-│
-├── .github/                  # 🤖 GitHub Actions
+├── archive/                  # Legacy static sites moved here (if present)
+├── .github/
 │   └── workflows/
 │       └── deploy.yml        # Automatic deployment to GitHub Pages
-│
-├── package.json              # Main project configuration
-└── README.md                 # This file
+├── package.json
+└── README.md
 ```
 
 ## 🚀 Quick Start
@@ -53,13 +44,15 @@ citypulse-urban-growth-tracker/
    cd citypulse-urban-growth-tracker
    ```
 
-2. Install dependencies:
+2. Install dependencies (root only needed for backend and tooling):
    ```bash
    npm install
    ```
 
-3. Start the development server:
+3. Start the frontend (Vite + React):
    ```bash
+   cd backend/maps/web
+   npm ci
    npm run dev
    ```
 
@@ -68,17 +61,11 @@ citypulse-urban-growth-tracker/
 ## 🌐 Deployment
 
 ### GitHub Pages (Frontend)
-The frontend automatically deploys to GitHub Pages when you push to the main branch.
+The Vite React app in `backend/maps/web` is deployed via GitHub Actions. On push to `main`, the workflow builds the app and publishes `backend/maps/web/dist` to Pages.
 
-**Manual Deployment:**
-```bash
-npm run deploy
-```
-
-**Automatic Deployment:**
-- Push to main branch
-- GitHub Actions will automatically build and deploy
-- Your site will be available at: `https://ayush.github.io/citypulse-urban-growth-tracker/`
+- Push to `main`
+- Workflow: `.github/workflows/deploy.yml`
+- Output URL: `https://ayush.github.io/citypulse-urban-growth-tracker/`
 
 ### Backend Deployment
 The backend can be deployed to:
@@ -91,14 +78,12 @@ The backend can be deployed to:
 ## 🛠️ Development
 
 ### Available Scripts
-- `npm start` - Start production server
-- `npm run dev` - Start development server with auto-reload
-- `npm run build` - Build frontend (currently static files)
-- `npm run deploy` - Deploy to GitHub Pages
+- Root: `npm start` (backend), `npm run dev` (backend dev)
+- Frontend (from `backend/maps/web`): `npm run dev`, `npm run build`, `npm run preview`
 
 ### Adding New Features
-1. **Frontend**: Add HTML/CSS/JS files to the `public/` directory
-2. **Backend**: Extend the Express server in `backend/server.js`
+1. **Frontend**: Implement in `backend/maps/web/src` (Vite + React)
+2. **Backend**: Extend Express servers under `backend/server` or `backend/maps/server`
 3. **Database**: Configure MongoDB connection in backend files
 
 ## 🔧 Configuration
@@ -116,16 +101,9 @@ JWT_SECRET=your_jwt_secret
 2. Update connection string in backend configuration
 3. Run database migrations if needed
 
-## 📱 Pages
+## 📱 Frontend App
 
-- **Homepage** (`/`) - Main landing page with city overview
-- **Dashboard** (`/dashboard.html`) - Official analytics and metrics
-- **Infrastructure** (`/Infrastructure.html`) - Infrastructure project tracking
-- **Real Estate** (`/Real Estate.html`) - Property development monitoring
-- **Traffic Patterns** (`/Traffic Patterns Interface.html`) - Real-time traffic data
-- **Growth Metrics** (`/Growth Metrics Interface.html`) - Urban development analytics
-- **Settings** (`/setting.html`) - User preferences and configuration
-- **Signup/Login** (`/singup.html`, `/simple_signup.html`) - User authentication
+The production site is the Vite app in `backend/maps/web`. Legacy static pages have been archived under `archive/`.
 
 ## 🤝 Contributing
 

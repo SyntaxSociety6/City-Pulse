@@ -8,8 +8,6 @@
     "start": "node backend/server.js",
     "dev": "nodemon backend/server.js",
     "build": "echo 'Frontend is already built (static HTML/CSS/JS)'",
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d public",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
@@ -33,7 +31,6 @@
     "jsonwebtoken": "^9.0.2"
   },
   "devDependencies": {
-    "gh-pages": "^6.1.0",
     "nodemon": "^3.0.1"
   }
 }

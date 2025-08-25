@@ -16,6 +16,7 @@ concurrency:
 
 jobs:
   build:
+    if: ${{ github.event.repository.fork == false }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -23,8 +24,6 @@ jobs:
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
-        with:
-          enablement: true
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -46,6 +45,7 @@ jobs:
           path: backend/maps/web/dist
 
   deploy:
+    if: ${{ github.event.repository.fork == false }}
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}

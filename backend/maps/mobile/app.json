@@ -1,0 +1,16 @@
+{
+  "expo": {
+    "name": "CityPulse",
+    "slug": "citypulse",
+    "version": "0.1.0",
+    "sdkVersion": "51.0.0",
+    "platforms": ["android", "ios", "web"],
+    "extra": {
+      "eas": {
+        "projectId": "local-dev"
+      }
+    }
+  }
+}
+
+

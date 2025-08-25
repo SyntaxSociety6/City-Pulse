@@ -1,0 +1,1314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CityPulse - Urban Growth & Infrastructure Tracker</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #06b6d4;
+            --accent: #f43f5e;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --purple: #a855f7;
+            --pink: #ec4899;
+            --dark-bg: rgba(15, 23, 42, 0.85);
+            --dark-card: rgba(30, 41, 59, 0.9);
+            --dark-border: rgba(51, 65, 85, 0.6);
+            --dark-text: #f1f5f9;
+            --dark-muted: #94a3b8;
+            --sidebar-width: 280px;
+            --header-height: 70px;
+        }
+
+        body {
+            background: url('https://images.unsplash.com/photo-1446776653964-20c1d3a81b06?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2071&q=80') no-repeat center center fixed;
+            background-size: cover;
+            color: var(--dark-text);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: -1;
+        }
+
+        /* Mobile First Approach */
+        .container {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Navigation - Hidden by default on mobile */
+        .sidebar {
+            position: fixed;
+            left: -100%;
+            top: 0;
+            width: 80%;
+            max-width: 300px;
+            height: 100%;
+            background: rgba(30, 41, 59, 0.95);
+            backdrop-filter: blur(10px);
+            color: var(--dark-text);
+            padding: 1.5rem 1rem;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            border-right: 1px solid var(--dark-border);
+            z-index: 1000;
+            transition: left 0.3s ease;
+        }
+
+        .sidebar.active {
+            left: 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 2rem;
+            padding: 0 0.5rem;
+        }
+
+        .logo i {
+            font-size: 2rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .logo h1 {
+            font-weight: 700;
+            font-size: 1.5rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-section {
+            margin-bottom: 2rem;
+        }
+
+        .nav-section h3 {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 1rem;
+            padding: 0 0.5rem;
+            color: var(--dark-muted);
+        }
+
+        .nav-links {
+            list-style: none;
+        }
+
+        .nav-links li {
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-links a {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: var(--dark-text);
+            text-decoration: none;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            transition: all 0.3s;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(6, 182, 212, 0.2));
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .nav-links i {
+            font-size: 1.25rem;
+            width: 24px;
+            text-align: center;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+
+        /* Header */
+        .header {
+            height: var(--header-height);
+            background: rgba(30, 41, 59, 0.9);
+            backdrop-filter: blur(10px);
+            padding: 0 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+            border-bottom: 1px solid var(--dark-border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .menu-toggle {
+            display: block;
+            background: none;
+            border: none;
+            color: var(--dark-text);
+            font-size: 1.5rem;
+            cursor: pointer;
+            margin-right: 1rem;
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background: rgba(30, 41, 59, 0.6);
+            border-radius: 0.5rem;
+            padding: 0.5rem;
+            flex: 1;
+            max-width: 400px;
+            border: 1px solid var(--dark-border);
+            margin-right: 1rem;
+        }
+
+        .search-bar i {
+            color: var(--dark-muted);
+            margin-right: 0.5rem;
+        }
+
+        .search-bar input {
+            border: none;
+            background: transparent;
+            outline: none;
+            width: 100%;
+            font-size: 0.95rem;
+            color: var(--dark-text);
+        }
+
+        .user-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .notification-btn {
+            position: relative;
+            background: none;
+            border: none;
+            color: var(--dark-text);
+            font-size: 1.25rem;
+            cursor: pointer;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: linear-gradient(135deg, var(--accent), var(--pink));
+            color: white;
+            font-size: 0.7rem;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-decoration: none;
+        }
+
+        .user-name, .user-role {
+            display: none;
+        }
+
+        /* Content Area */
+        .content {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+        }
+
+        .header-section {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .view-toggle-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+        }
+
+        .view-toggle {
+            display: flex;
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 0.5rem;
+            padding: 0.25rem;
+            border: 1px solid var(--dark-border);
+        }
+
+        .view-toggle button {
+            padding: 0.5rem 0.75rem;
+            border: none;
+            border-radius: 0.375rem;
+            background: transparent;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+            color: var(--dark-muted);
+            font-size: 0.9rem;
+        }
+
+        .view-toggle button.active {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .earth-icon {
+            font-size: 1.5rem;
+            color: var(--secondary);
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--dark-text);
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .stat-card {
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 0.75rem;
+            padding: 1rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--dark-border);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+
+        .stat-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+
+        .bg-primary {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(6, 182, 212, 0.2));
+            color: var(--primary);
+        }
+
+        .bg-success {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(5, 150, 105, 0.2));
+            color: var(--success);
+        }
+
+        .bg-warning {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(217, 119, 6, 0.2));
+            color: var(--warning);
+        }
+
+        .bg-danger {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(220, 38, 38, 0.2));
+            color: var(--danger);
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--dark-muted);
+        }
+
+        /* Map Container */
+        .map-container {
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 0.75rem;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            height: 300px;
+            position: relative;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--dark-border);
+        }
+
+        .map {
+            width: 100%;
+            height: 100%;
+            background: rgba(30, 41, 59, 0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .map-overlay {
+            position: absolute;
+            top: 0.5rem;
+            left: 0.5rem;
+            right: 0.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .map-controls {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .control-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 0.5rem;
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--dark-border);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--dark-text);
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .control-btn:hover {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+        }
+
+        .map-legend {
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 0.5rem;
+            padding: 0.5rem;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            border: 1px solid var(--dark-border);
+            align-self: flex-start;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.75rem;
+        }
+
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .color-project {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+        }
+
+        .color-hazard {
+            background: linear-gradient(135deg, var(--danger), var(--accent));
+        }
+
+        .color-congestion {
+            background: linear-gradient(135deg, var(--warning), #f97316);
+        }
+
+        /* Projects Section */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .project-card {
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 0.75rem;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 1px solid var(--dark-border);
+        }
+
+        .project-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+        }
+
+        .project-image {
+            height: 140px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2rem;
+        }
+
+        .project-content {
+            padding: 1rem;
+        }
+
+        .project-status {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 1rem;
+            font-size: 0.7rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .status-ongoing {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(217, 119, 6, 0.2));
+            color: var(--warning);
+        }
+
+        .status-completed {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(5, 150, 105, 0.2));
+            color: var(--success);
+        }
+
+        .status-delayed {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(220, 38, 38, 0.2));
+            color: var(--danger);
+        }
+
+        .project-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--dark-text);
+        }
+
+        .project-desc {
+            font-size: 0.8rem;
+            color: var(--dark-muted);
+            margin-bottom: 0.75rem;
+            line-height: 1.4;
+        }
+
+        .project-meta {
+            display: flex;
+            justify-content: space-between;
+            color: var(--dark-muted);
+            font-size: 0.75rem;
+        }
+
+        .project-meta i {
+            margin-right: 0.25rem;
+        }
+
+        /* Alerts Section */
+        .alerts-list {
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 0.75rem;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--dark-border);
+        }
+
+        .alert-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid var(--dark-border);
+            transition: background-color 0.3s;
+        }
+
+        .alert-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .alert-item:last-child {
+            border-bottom: none;
+        }
+
+        .alert-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            margin-right: 0.75rem;
+            flex-shrink: 0;
+        }
+
+        .alert-danger {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(220, 38, 38, 0.2));
+            color: var(--danger);
+        }
+
+        .alert-warning {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(217, 119, 6, 0.2));
+            color: var(--warning);
+        }
+
+        .alert-info {
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.2), rgba(8, 145, 178, 0.2));
+            color: var(--secondary);
+        }
+
+        .alert-content {
+            flex: 1;
+        }
+
+        .alert-title {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            font-size: 0.9rem;
+        }
+
+        .alert-desc {
+            font-size: 0.8rem;
+            color: var(--dark-muted);
+        }
+
+        .alert-time {
+            font-size: 0.7rem;
+            color: var(--dark-muted);
+            margin-left: 0.5rem;
+            white-space: nowrap;
+        }
+
+        /* Report Button */
+        .report-btn {
+            position: fixed;
+            bottom: 1rem;
+            right: 1rem;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            z-index: 100;
+        }
+
+        .report-btn:hover {
+            transform: scale(1.1) rotate(90deg);
+            box-shadow: 0 6px 16px rgba(99, 102, 241, 0.5);
+        }
+
+        /* Overlay for mobile sidebar */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            z-index: 999;
+            display: none;
+        }
+
+        .overlay.active {
+            display: block;
+        }
+
+        /* Media Queries for Responsiveness */
+        @media (min-width: 640px) {
+            .content {
+                padding: 1.5rem;
+            }
+            
+            .section-title {
+                font-size: 1.5rem;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 1.5rem;
+            }
+            
+            .map-container {
+                height: 400px;
+            }
+            
+            .user-name, .user-role {
+                display: block;
+            }
+            
+            .user-avatar {
+                width: 40px;
+                height: 40px;
+            ;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .container {
+                flex-direction: row;
+            }
+            
+            .sidebar {
+                position: relative;
+                left: 0;
+                width: var(--sidebar-width);
+                max-width: none;
+            }
+            
+            .menu-toggle {
+                display: none;
+            }
+            
+            .overlay {
+                display: none !important;
+            }
+            
+            .header-section {
+                flex-direction: row;
+                align-items: center;
+                justify-content: space-between;
+            }
+            
+            .view-toggle-container {
+                width: auto;
+                gap: 1rem;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .map-overlay {
+                flex-direction: row;
+                justify-content: space-between;
+            }
+            
+            .map-legend {
+                align-self: center;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .stats-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+            
+            .projects-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
+            .user-profile {
+                gap: 0.75rem;
+            }
+            
+            .search-bar {
+                max-width: 300px;
+            }
+        }
+
+        @media (min-width: 1280px) {
+            .content {
+                padding: 2rem;
+            }
+            
+            .map-container {
+                height: 500px;
+                background-image: url(PrintScreen.png);
+                background-color: #10b981;
+            }
+            
+            .stat-card {
+                padding: 1.5rem;
+            }
+            
+            .project-content {
+                padding: 1.5rem;
+            }
+        }
+
+        /* iOS Safari specific adjustments */
+        @supports (-webkit-touch-callout: none) {
+            body {
+                min-height: -webkit-fill-available;
+            }
+            
+            .container {
+                min-height: -webkit-fill-available;
+            }
+        }
+
+        /* Android Chrome specific adjustments */
+        @media screen and (max-width: 640px) and (orientation: portrait) {
+            .header {
+                padding: 0 0.5rem;
+            }
+            
+            .search-bar {
+                margin-right: 0.5rem;
+            }
+            
+            .user-actions {
+                gap: 0.5rem;
+            }
+        }
+
+        /* Dark mode support */
+        @media (prefers-color-scheme: dark) {
+            body {
+                background-blend-mode: overlay;
+            }
+        }
+
+        /* High contrast support */
+        @media (prefers-contrast: high) {
+            :root {
+                --dark-border: rgba(255, 255, 255, 0.6);
+            }
+            
+            .stat-card, .project-card, .map-container, .alerts-list, .view-toggle, .search-bar {
+                border-width: 2px;
+            }
+        }
+
+        /* Reduced motion support */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+            
+            .earth-icon {
+                animation: none;
+            }
+            
+            .stat-card:hover, .project-card:hover {
+                transform: none;
+            }
+            
+            .report-btn:hover {
+                transform: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Overlay for mobile sidebar -->
+    <div class="overlay" id="overlay"></div>
+
+    <div class="container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar" id="sidebar">
+            <div class="logo">
+                <i class="fas fa-city"></i>
+                <h1>CITY PULSE</h1>
+            </div>
+            
+            <div class="nav-section">
+                <h3>Main</h3>
+                <ul class="nav-links">
+                    <li><a href="1.html" class="active"><i class="fas fa-map"></i> <span>Map View</span></a></li>
+                    <li><a href="dashboard.html"><i class="fas fa-chart-line"></i> <span>Dashboard</span></a></li>
+                    <li><a href="Infrastructure.html"><i class="fas fa-road"></i> <span>Infrastructure</span></a></li>
+                    <li><a href="Real Estate.html"><i class="fas fa-home"></i> <span>Real Estate</span></a></li>
+                </ul>
+            </div>
+           
+            
+            <div class="nav-section">
+                <h3>User</h3>
+                <ul class="nav-links">
+                    <li><a href="alter.html"><i class="fas fa-bell"></i> <span>Alerts</span></a></li>
+                    <li><a href="Traffic Patterns Interface.html"><i class="fas fa-comment"></i> <span>Reports</span></a></li>
+                    <li><a href="setting.html"><i class="fas fa-cog"></i> <span>Settings</span></a></li>
+                    <li><a href="singup.html"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a></li>
+                </ul>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <button class="menu-toggle" id="menuToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search for locations, projects, or issues...">
+                </div>
+                
+                <div class="user-actions">
+                    <button class="notification-btn">
+                        <i class="fas fa-bell"></i>
+                        <span > <a href="alter.html"  class="notification-badge">10</a></span>
+                    </button>
+                    
+                    <div class="user-profile">
+                        <div><a href="singup.html"  class="user-avatar">Login</a></div>
+                        <div>
+                            <div class="user-name">Indian</div>
+                            <div class="user-role">Citizen</div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Content Area -->
+            <div class="content">
+                <div class="header-section">
+                    <h2 class="section-title">Urban Growth & Infrastructure Tracker</h2>
+                    
+                    <div class="view-toggle-container">
+                        <div class="view-toggle">
+                            <button class="active">Citizen View</button>
+                            <button>Official View</button>
+                        </div>
+                        <div class="earth-icon">
+                            <i class="fas fa-earth-americas"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Stats Overview -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon bg-primary">
+                                <i class="fas fa-road"></i>
+                            </div>
+                            <span class="stat-trend">+12%</span>
+                        </div>
+                        <div class="stat-value">42</div>
+                        <div class="stat-label">Active Infrastructure Projects</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon bg-success">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                            <span class="stat-trend">+8%</span>
+                        </div>
+                        <div class="stat-value">28</div>
+                        <div class="stat-label">Completed Projects This Year</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon bg-warning">
+                                <i class="fas fa-exclamation-triangle"></i>
+                            </div>
+                            <span class="stat-trend">-3%</span>
+                        </div>
+                        <div class="stat-value">17</div>
+                        <div class="stat-label">Reported Hazards</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon bg-danger">
+                                <i class="fas fa-traffic-jam"></i>
+                            </div>
+                            <span class="stat-trend">+5%</span>
+                        </div>
+                        <div class="stat-value">9</div>
+                        <div class="stat-label">Congestion Points</div>
+                    </div>
+                </div>
+                
+                <!-- Map Container -->
+                <div class="map-container">
+                    <div class="map">
+                        <i class="fas fa-map-marked-alt" style="font-size: 1.5rem; margin-right: 0.5rem;"></i>
+                        <a href="1.html" style="color: inherit; text-decoration: none; display: flex; align-items: center; justify-content: center; height: 100%;">
+                            Interactive City Map with Project Markers
+                            <br><small style="font-size: 0.8rem; margin-top: 0.5rem; opacity: 0.8;">Click to open full map view</small>
+                        </a>
+                    </div>
+                    
+                    <div class="map-overlay">
+                        <div class="map-controls">
+                            <button class="control-btn"><i class="fas fa-search-plus"></i></button>
+                            <button class="control-btn"><i class="fas fa-search-minus"></i></button>
+                            <button class="control-btn"><i class="fas fa-location-arrow"></i></button>
+                            <button class="control-btn"><i class="fas fa-layer-group"></i></button>
+                        </div>
+                        
+                        <div class="map-legend">
+                            <div class="legend-item">
+                                <div class="legend-color color-project"></div>
+                                <span>Projects</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color color-hazard"></div>
+                                <span>Hazards</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color color-congestion"></div>
+                                <span>Congestion</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Projects Section -->
+                <h2 class="section-title">Recent Infrastructure Projects</h2>
+                <div class="projects-grid">
+                    <div class="project-card">
+                        <div class="project-image">
+                            <i class="fas fa-bridge"></i>
+                        </div>
+                        <div class="project-content">
+                            <span class="project-status status-ongoing">Ongoing</span>
+                            <h3 class="project-title">Riverfront Bridge Expansion</h3>
+                            <p class="project-desc">Adding two new lanes to improve traffic flow between districts.</p>
+                            <div class="project-meta">
+                                <span><i class="fas fa-calendar"></i> Est. Dec 2023</span>
+                                <span><i class="fas fa-dollar-sign"></i> $4.2M</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="project-card">
+                        <div class="project-image">
+                            <i class="fas fa-subway"></i>
+                        </div>
+                        <div class="ai">
+                            
+                        </div>
+                        <div class="project-content">
+                            <span class="project-status status-delayed">Delayed</span>
+                            <h3 class="project-title">Central Metro Station</h3>
+                            <p class="project-desc">New underground station with accessibility features.</p>
+                            <div class="project-meta">
+                                <span><i class="fas fa-calendar"></i> Est. Mar 2024</span>
+                                <span><i class="fas fa-dollar-sign"></i> $8.7M</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="project-card">
+                        <div class="project-image">
+                            <i class="fas fa-parachute-box"></i>
+                        </div>
+                        <div class="project-content">
+                            <span class="project-status status-completed">Completed</span>
+                            <h3 class="project-title">Northside Park Renovation</h3>
+                            <p class="project-desc">Community park upgrade with new facilities and green spaces.</p>
+                            <div class="project-meta">
+                                <span><i class="fas fa-calendar"></i> Completed</span>
+                                <span><i class="fas fa-dollar-sign"></i> $2.3M</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Alerts Section -->
+                <h2 class="section-title">Recent Alerts</h2>
+                <div class="alerts-list">
+                    <div class="alert-item">
+                        <div class="alert-icon alert-danger">
+                            <i class="fas fa-exclamation-circle"></i>
+                        </div>
+                        <div class="alert-content">
+                            <h3 class="alert-title">Road Closure</h3>
+                            <p class="alert-desc">Main Street closed between 5th and 7th Ave until Friday</p>
+                        </div>
+                        <div class="alert-time">10 min ago</div>
+                    </div>
+                    
+                    <div class="alert-item">
+                        <div class="alert-icon alert-warning">
+                            <i class="fas fa-traffic-light"></i>
+                        </div>
+                        <div class="alert-content">
+                            <h3 class="alert-title">Traffic Bottleneck</h3>
+                            <p class="alert-desc">Heavy congestion reported at Central Square</p>
+                        </div>
+                        <div class="alert-time">45 min ago</div>
+                    </div>
+                    
+                    <div class="alert-item">
+                        <div class="alert-icon alert-info">
+                            <i class="fas fa-bolt"></i>
+                        </div>
+                        <div class="alert-content">
+                            <h3 class="alert-title">Power Outage</h3>
+                            <p class="alert-desc">Reported in Downtown area - crew dispatched</p>
+                        </div>
+                        <div class="alert-time">1 hour ago</div>
+                    </div>
+                    
+                    <div class="alert-item">
+                        <div class="alert-icon alert-danger">
+                            <i class="fas fa-water"></i>
+                        </div>
+                        <div class="alert-content">
+                            <h3 class="alert-title">Sewage Overflow</h3>
+                            <p class="alert-desc">Reported near Riverfront Park - avoid area</p>
+                        </div>
+                        <div class="alert-time">2 hours ago</div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+<!--Footer-->
+    <footer>
+        <div class="footer-container">
+            <div class="social-links">
+                <a aria-label="Facebook" href="#">
+                    <i class="fab fa-facebook-f"></i>
+                </a>
+                <a aria-label="Instagram" href="#">
+                    <i class="fab fa-instagram"></i>
+                </a>
+                <a aria-label="YouTube" href="#">
+                    <i class="fab fa-youtube"></i>
+                </a>
+                <a aria-label="X" href="#">
+                    <i class="fab fa-x-twitter"></i>
+                </a>
+                <a aria-label="LinkedIn" href="#">
+                    <i class="fab fa-linkedin-in"></i>
+                </a>
+                <a aria-label="Medium" href="#">
+                    <i class="fab fa-medium-m"></i>
+                </a>
+                <a aria-label="TikTok" href="#">
+                    <i class="fab fa-tiktok"></i>
+                </a>
+            </div>
+            
+            <div class="logo-section">
+                
+                <p>Copyright ©️ 2025 CityPulse, Inc.</p>
+            </div>
+            
+            <nav class="footer-nav">
+                <a href="#">Legal Stuff</a>
+                <span>|</span>
+                <a href="#">Privacy Policy</a>
+                <span>|</span>
+                <a href="#">Security</a>
+                <span>|</span>
+                <a href="#">Website Accessibility</a>
+                <span>|</span>
+                <a href="#">Manage Cookies</a>
+                <span>|</span>
+                <a href="#">Your Privacy Choices</a>
+            </nav>
+        </div>
+    </footer>
+    
+    <div class="chat-button">
+        <i class="fas fa-comment" style="color: #AAB8C2; font-size: 24px;"></i>
+    </div>
+    <!-- Report Button -->
+    <button class="report-btn">
+        <i class="fas fa-plus"></i>
+    </button>
+    
+
+    <script>
+        // Toggle mobile sidebar
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+        
+        menuToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        });
+        
+        overlay.addEventListener('click', () => {
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+        });
+        
+        // View toggle functionality
+        document.querySelectorAll('.view-toggle button').forEach(button => {
+            button.addEventListener('click', function() {
+                document.querySelectorAll('.view-toggle button').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                this.classList.add('active');
+                
+                // In a real app, this would switch between citizen and official views
+                if (this.textContent === 'Official View') {
+                    document.querySelector('.section-title').textContent = 'Urban Growth Analytics Dashboard';
+                } else {
+                    document.querySelector('.section-title').textContent = 'Urban Growth & Infrastructure Tracker';
+                }
+            });
+        });
+        
+        // Simulate real-time updates
+        setInterval(() => {
+            const alertItems = document.querySelectorAll('.alert-item');
+            const firstAlert = alertItems[0];
+            const newAlert = firstAlert.cloneNode(true);
+            
+            // Update time to "just now"
+            newAlert.querySelector('.alert-time').textContent = 'Just now';
+            
+            // Create a subtle animation effect
+            newAlert.style.opacity = '0';
+            newAlert.style.transform = 'translateY(-10px)';
+            
+            // Add to the beginning of the list
+            document.querySelector('.alerts-list').insertBefore(newAlert, firstAlert);
+            
+            // Animate in
+            setTimeout(() => {
+                newAlert.style.transition = 'all 0.3s';
+                newAlert.style.opacity = '1';
+                newAlert.style.transform = 'translateY(0)';
+            }, 10);
+            
+            // Remove the oldest alert if there are more than 4
+            if (document.querySelectorAll('.alert-item').length > 4) {
+                document.querySelector('.alerts-list').lastElementChild.remove();
+            }
+        }, 30000);
+        
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            if (window.innerWidth >= 768) {
+                sidebar.classList.remove('active');
+                overlay.classList.remove('active');
+            }
+        });
+        
+        // Touch device improvements
+        let touchStart = 0;
+        let touchEnd = 0;
+        
+        document.addEventListener('touchstart', e => {
+            touchStart = e.changedTouches[0].screenX;
+        }, false);
+        
+        document.addEventListener('touchend', e => {
+            touchEnd = e.changedTouches[0].screenX;
+            handleSwipe();
+        }, false);
+        
+        function handleSwipe() {
+            // Swipe right to open sidebar on mobile
+            if (touchEnd < touchStart && touchStart - touchEnd > 50 && window.innerWidth < 768) {
+                sidebar.classList.add('active');
+                overlay.classList.add('active');
+            }
+            
+            // Swipe left to close sidebar on mobile
+            if (touchEnd > touchStart && touchEnd - touchStart > 50 && window.innerWidth < 768) {
+                sidebar.classList.remove('active');
+                overlay.classList.remove('active');
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+{
+  "name": "citypulse",
+  "private": true,
+  "version": "0.1.0",
+  "workspaces": [
+    "apps/*",
+    "services/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "npm -w packages/shared run build && npm -w services/api run build && npm -w apps/web run build",
+    "dev:web": "npm -w apps/web run dev",
+    "dev:api": "npm -w services/api run dev",
+    "dev": "concurrently -n web,api -c magenta,cyan \"npm -w apps/web run dev\" \"npm -w services/api run dev\"",
+    "lint": "echo \"Add linter later\""
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
+
+

@@ -1,0 +1,661 @@
+<html lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1" name="viewport"/>
+  <title>
+  CITY PULSE
+  </title>
+  <script src="https://cdn.tailwindcss.com">
+  </script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&amp;display=swap" rel="stylesheet"/>
+  <style>
+   body {
+      font-family: 'Inter', sans-serif;
+    }
+    /* Scrollbar for notification dropdown */
+    .scrollbar-thin::-webkit-scrollbar {
+      width: 6px;
+    }
+    .scrollbar-thin::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .scrollbar-thin::-webkit-scrollbar-thumb {
+      background-color: #7c3aed;
+      border-radius: 9999px;
+    }
+  </style>
+ </head>
+ <body class="bg-white text-gray-900">
+  <div class="flex min-h-screen">
+   <!-- Sidebar -->
+   <aside class="w-56 flex flex-col border-r border-gray-200 px-6 py-8">
+    <div class="flex items-center mb-10 space-x-2">
+     
+     <span class="font-extrabold text-xl text-purple-700 select-none">
+      CITY PULSE
+     </span>
+    </div>
+    <nav class="flex flex-col space-y-4 text-gray-700 text-sm font-semibold">
+     <a class="flex items-center space-x-3 bg-purple-200 rounded-lg px-4 py-2 text-purple-700" href="dashboard.html">
+      <i class="fas fa-th-large text-base">
+      </i>
+      <span>
+       Dashboard
+      </span>
+     </a>
+     
+     
+     
+     <a class="flex items-center space-x-3 hover:text-gray-900" href="Growth Metrics Interface.html">
+      <i class="fas fa-building text-base">
+      </i>
+      <span>
+       Growth Metrics
+      </span>
+     </a>
+     <a class="flex items-center space-x-3 hover:text-gray-900" href="alter.html">
+      <i class="fas fa-comment-alt text-base">
+      </i>
+      <span>
+       Message (1)
+      </span>
+     </a>
+     <a class="flex items-center space-x-3 hover:text-gray-900" href="Infrastructure.html">
+      <i class="fas fa-newspaper text-base">
+      </i>
+      <span>
+       Reports
+      </span>
+     </a>
+     <a class="flex items-center space-x-3 hover:text-gray-900" href="#">
+      <i class="fas fa-cog text-base">
+      </i>
+      <span>
+       Settings
+      </span>
+     </a>
+     <a class="flex items-center space-x-3 hover:text-gray-900" href="1.html">
+      <i class="fas fa-arrow-left text-base">
+      </i>
+      <span>
+       Back to Home
+      </span>
+     </a>
+    </nav>
+   </aside>
+   <!-- Main content -->
+   <main class="flex-1 px-6 py-8">
+    <!-- Top bar -->
+    <div class="flex items-center justify-between mb-8">
+     <form class="flex-1 max-w-md">
+      <label class="sr-only" for="search">
+       Search in dashboard
+      </label>
+      <input class="w-full border border-gray-300 rounded-md py-2 px-3 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent" id="search" placeholder="Search in dashboard" type="search"/>
+     </form>
+     <div class="flex items-center space-x-6 ml-6">
+      
+      <!-- Bell notification with dropdown -->
+      <div class="relative cursor-pointer group">
+       <button aria-label="Bell notifications" class="text-gray-600 hover:text-gray-900 focus:outline-none">
+        <i class="fas fa-bell fa-lg">
+        </i>
+       </button>
+       <span class="absolute -top-1 -right-1 bg-orange-500 text-white text-xs font-semibold rounded-full w-5 h-5 flex items-center justify-center select-none">
+        10
+       </span>
+       <!-- Dropdown -->
+       <div class="absolute right-0 mt-2 w-72 bg-white rounded-lg shadow-lg border border-gray-200 p-4 hidden group-hover:block z-20">
+        <h3 class="font-semibold text-gray-900 mb-3">
+         Notification
+        </h3>
+        <ul class="space-y-3 max-h-48 overflow-y-auto scrollbar-thin pr-2">
+         <li class="flex items-start space-x-3">
+          <img alt="Jonathon Smith profile picture with short black hair and smiling" class="w-8 h-8 rounded-full flex-shrink-0" height="32" src="https://storage.googleapis.com/a1aa/image/e6a072fc-0ca0-4a72-6b79-791cd011a01f.jpg" width="32"/>
+          <p class="text-xs text-gray-700 leading-tight">
+           <span class="font-bold text-orange-500">
+            sandeep
+           </span>
+           <span>
+             Report and issue
+           </span>
+           
+          </p>
+         </li>
+         <li class="flex items-start space-x-3">
+          <img alt="Jonathon Smith profile picture with short black hair and smiling" class="w-8 h-8 rounded-full flex-shrink-0" height="32" src="https://storage.googleapis.com/a1aa/image/e6a072fc-0ca0-4a72-6b79-791cd011a01f.jpg" width="32"/>
+          <p class="text-xs text-gray-700 leading-tight">
+           <span class="font-bold">
+            sunny
+           </span>
+           <span>
+             Report and issue
+           </span>
+          
+          </p>
+         </li>
+         <li class="flex items-start space-x-3">
+          <img alt="Jonathon Smith profile picture with short black hair and smiling" class="w-8 h-8 rounded-full flex-shrink-0" height="32" src="https://storage.googleapis.com/a1aa/image/e6a072fc-0ca0-4a72-6b79-791cd011a01f.jpg" width="32"/>
+          <p class="text-xs text-gray-700 leading-tight">
+           <span class="font-bold text-orange-500">
+            Amit singh
+           </span>
+           <span>
+             Report and issue
+           </span>
+           
+          </p>
+         </li>
+         <li class="flex items-start space-x-3">
+          <img alt="Jonathon Smith profile picture with short black hair and smiling" class="w-8 h-8 rounded-full flex-shrink-0" height="32" src="https://storage.googleapis.com/a1aa/image/e6a072fc-0ca0-4a72-6b79-791cd011a01f.jpg" width="32"/>
+          <p class="text-xs text-gray-700 leading-tight">
+           <span class="font-bold">
+            sandip bros
+           </span>
+           <span>
+             Report and issue
+           </span>
+           
+          </p>
+         </li>
+        </ul>
+        <a class="block mt-3 text-center text-purple-700 font-semibold text-xs hover:underline" href="#">
+         All Notification
+        </a>
+       </div>
+      </div>
+      <!-- User profile -->
+      <div class="flex items-center space-x-2 cursor-pointer select-none">
+       <img alt="Jonathon Smith profile picture with short black hair and smiling" class="w-8 h-8 rounded-full" height="32" src="https://storage.googleapis.com/a1aa/image/e6a072fc-0ca0-4a72-6b79-791cd011a01f.jpg" width="32"/>
+       <span class="text-sm font-semibold text-gray-900">
+        Raj
+       </span>
+       <i class="fas fa-chevron-down text-gray-600 text-xs">
+       </i>
+      </div>
+     </div>
+    </div>
+    <!-- Notification header and controls -->
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
+     <h2 class="font-semibold text-gray-900 text-lg mb-4 sm:mb-0">
+      Notification
+     </h2>
+     <div class="flex items-center space-x-4">
+      <div class="relative inline-block text-left">
+       <button aria-expanded="false" aria-haspopup="true" class="inline-flex justify-center w-full rounded-md border border-purple-700 bg-purple-700 px-3 py-1 text-sm font-semibold text-white hover:bg-purple-800 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:ring-offset-1" id="selectBtn" type="button">
+        Select
+        <svg aria-hidden="true" class="-mr-1 ml-2 h-4 w-4 text-white" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+         <path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+         </path>
+        </svg>
+       </button>
+       <div aria-labelledby="selectBtn" aria-orientation="vertical" class="hidden origin-top-left absolute left-0 mt-1 w-40 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-10" id="selectDropdown" role="menu" tabindex="-1">
+        <div class="py-1" role="none">
+         <a class="block px-4 py-2 text-sm text-purple-700 hover:bg-purple-50 hover:text-purple-900" href="#" role="menuitem" tabindex="-1">
+          Mark as Read
+         </a>
+         <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-900" href="#" role="menuitem" tabindex="-1">
+          Mark as UnRead
+         </a>
+         <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-900" href="#" role="menuitem" tabindex="-1">
+          Delete
+         </a>
+        </div>
+       </div>
+      </div>
+      <div class="relative inline-block text-left">
+       <button aria-expanded="false" aria-haspopup="true" class="inline-flex justify-center w-full rounded-md border border-gray-300 bg-white px-3 py-1 text-sm font-normal text-gray-900 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:ring-offset-1" id="filterBtn" type="button">
+        All
+        <svg aria-hidden="true" class="-mr-1 ml-2 h-4 w-4 text-gray-600" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+         <path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+         </path>
+        </svg>
+       </button>
+       <div aria-labelledby="filterBtn" aria-orientation="vertical" class="hidden origin-top-left absolute right-0 mt-1 w-40 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-10" id="filterDropdown" role="menu" tabindex="-1">
+        <div class="py-1" role="none">
+         <a class="block px-4 py-2 text-sm text-purple-700 hover:bg-purple-50 hover:text-purple-900" href="#" role="menuitem" tabindex="-1">
+          All
+         </a>
+         <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-900" href="#" role="menuitem" tabindex="-1">
+          Read
+         </a>
+         <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-900" href="#" role="menuitem" tabindex="-1">
+          Unread
+         </a>
+        </div>
+       </div>
+      </div>
+     </div>
+    </div>
+    <!-- Notifications list -->
+    <section>
+     <!-- Today -->
+     <div class="mb-6">
+      <div class="flex items-center bg-gray-50 rounded-t-md border border-b-0 border-gray-200 px-4 py-3 text-xs font-semibold text-gray-900">
+       Today
+      </div>
+      <ul class="border border-gray-200 rounded-b-md divide-y divide-gray-100">
+       <li class="flex items-center px-4 py-3 space-x-4">
+        <input aria-label="Select notification" class="w-4 h-4 rounded border-gray-300 text-purple-700 focus:ring-purple-600" type="checkbox"/>
+        <img alt="Jonathon Smith profile picture with short black hair and smiling" class="w-8 h-8 rounded-full flex-shrink-0" height="32" src="https://storage.googleapis.com/a1aa/image/e6a072fc-0ca0-4a72-6b79-791cd011a01f.jpg" width="32"/>
+        <p class="text-xs text-gray-700 flex-1">
+         <span class="font-bold">
+          Jonathon Smith
+         </span>
+         <span>
+           Report and issue
+         </span>
+        
+        </p>
+        <time class="text-xs text-gray-400 flex-shrink-0">
+         11 hours ago
+        </time>
+        <button class="bg-gray-900 text-white text-xs font-semibold rounded-md px-4 py-2 hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:ring-offset-1">
+         Details
+        </button>
+       </li>
+       <li class="flex items-center px-4 py-3 space-x-4">
+        <input aria-label="Select notification" class="w-4 h-4 rounded border-gray-300 text-purple-700 focus:ring-purple-600" type="checkbox"/>
+        <img alt="Jonathon Smith profile picture with short black hair and smiling" class="w-8 h-8 rounded-full flex-shrink-0" height="32" src="https://storage.googleapis.com/a1aa/image/e6a072fc-0ca0-4a72-6b79-791cd011a01f.jpg" width="32"/>
+        <p class="text-xs text-gray-700 flex-1">
+         <span class="font-bold">
+           Smith
+         </span>
+         <span>
+           Report and issue
+         </span>
+         
+        </p>
+        <time class="text-xs text-gray-400 flex-shrink-0">
+         23 hours ago
+        </time>
+        <button class="bg-gray-900 text-white text-xs font-semibold rounded-md px-4 py-2 hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:ring-offset-1">
+         Details
+        </button>
+       </li>
+       <li class="flex items-center px-4 py-3 space-x-4">
+        <input aria-label="Select notification" class="w-4 h-4 rounded border-gray-300 text-purple-700 focus:ring-purple-600" type="checkbox"/>
+        <img alt="Jonathon Smith profile picture with short black hair and smiling" class="w-8 h-8 rounded-full flex-shrink-0" height="32" src="https://storage.googleapis.com/a1aa/image/e6a072fc-0ca0-4a72-6b79-791cd011a01f.jpg" width="32"/>
+        <p class="text-xs text-gray-700 flex-1">
+         <span class="font-bold">
+          Amit singh
+         </span>
+         <span>
+           Report and issue
+         </span>
+        
+        </p>
+        <time class="text-xs text-gray-400 flex-shrink-0">
+         9 hours ago
+        </time>
+        <button class="bg-gray-900 text-white text-xs font-semibold rounded-md px-4 py-2 hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:ring-offset-1">
+         Details
+        </button>
+       </li>
+      </ul>
+     </div>
+     <!-- Yesterday -->
+     <div>
+      <div class="flex items-center bg-gray-50 rounded-t-md border border-b-0 border-gray-200 px-4 py-3 text-xs font-semibold text-gray-900">
+       Yesterday
+      </div>
+      <ul class="border border-gray-200 rounded-b-md divide-y divide-gray-100">
+       <li class="flex items-center px-4 py-3 space-x-4">
+        <input aria-label="Select notification" checked="" class="w-4 h-4 rounded border-gray-300 text-purple-700 focus:ring-purple-600" type="checkbox"/>
+        <img alt="Jonathon Smith profile picture with short black hair and smiling" class="w-8 h-8 rounded-full flex-shrink-0" height="32" src="https://storage.googleapis.com/a1aa/image/e6a072fc-0ca0-4a72-6b79-791cd011a01f.jpg" width="32"/>
+        <p class="text-xs text-gray-700 flex-1">
+         <span class="font-bold text-orange-500">
+          Jonathon
+         </span>
+         <span>
+           Report and issue
+         </span>
+        
+        </p>
+        <time class="text-xs text-gray-400 flex-shrink-0">
+         2 hours ago
+        </time>
+        <span class="text-purple-700 text-xs font-semibold flex-shrink-0">
+         Unread
+        </span>
+        <button class="bg-gray-900 text-white text-xs font-semibold rounded-md px-4 py-2 hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:ring-offset-1">
+         Details
+        </button>
+       </li>
+       <li class="flex items-center px-4 py-3 space-x-4">
+        <input aria-label="Select notification" class="w-4 h-4 rounded border-gray-300 text-purple-700 focus:ring-purple-600" type="checkbox"/>
+        <img alt="Jonathon Smith profile picture with short black hair and smiling" class="w-8 h-8 rounded-full flex-shrink-0" height="32" src="https://storage.googleapis.com/a1aa/image/e6a072fc-0ca0-4a72-6b79-791cd011a01f.jpg" width="32"/>
+        <p class="text-xs text-gray-700 flex-1">
+         <span class="font-bold">
+          Jonathon Smith
+         </span>
+         <span>
+          Report and issue
+         </span>
+         
+        </p>
+        <time class="text-xs text-gray-400 flex-shrink-0">
+         1 hours ago
+        </time>
+        <span class="text-gray-700 text-xs font-normal flex-shrink-0">
+         Read
+        </span>
+        <button class="bg-gray-900 text-white text-xs font-semibold rounded-md px-4 py-2 hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:ring-offset-1">
+         Details
+        </button>
+       </li>
+       <li class="flex items-center px-4 py-3 space-x-4">
+        <input aria-label="Select notification" class="w-4 h-4 rounded border-gray-300 text-purple-700 focus:ring-purple-600" type="checkbox"/>
+        <img alt="Jonathon Smith profile picture with short black hair and smiling" class="w-8 h-8 rounded-full flex-shrink-0" height="32" src="https://storage.googleapis.com/a1aa/image/e6a072fc-0ca0-4a72-6b79-791cd011a01f.jpg" width="32"/>
+        <p class="text-xs text-gray-700 flex-1">
+         <span class="font-bold">
+          pranav
+         </span>
+         <span>
+           Report and issue
+         </span>
+        
+        </p>
+        <time class="text-xs text-gray-400 flex-shrink-0">
+         12 hours ago
+        </time>
+        <span class="text-gray-700 text-xs font-normal flex-shrink-0">
+         Read
+        </span>
+        <button class="bg-gray-900 text-white text-xs font-semibold rounded-md px-4 py-2 hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:ring-offset-1">
+         Details
+        </button>
+       </li>
+       <li class="flex items-center px-4 py-3 space-x-4">
+        <input aria-label="Select notification" class="w-4 h-4 rounded border-gray-300 text-purple-700 focus:ring-purple-600" type="checkbox"/>
+        <img alt="Jonathon Smith profile picture with short black hair and smiling" class="w-8 h-8 rounded-full flex-shrink-0" height="32" src="https://storage.googleapis.com/a1aa/image/e6a072fc-0ca0-4a72-6b79-791cd011a01f.jpg" width="32"/>
+        <p class="text-xs text-gray-700 flex-1">
+         <span class="font-bold">
+          Jonathon Smith
+         </span>
+         <span>
+           Report and issue
+         </span>
+         
+        </p>
+        <time class="text-xs text-gray-400 flex-shrink-0">
+         9 hours ago
+        </time>
+        <span class="text-gray-700 text-xs font-normal flex-shrink-0">
+         Read
+        </span>
+        <button class="bg-gray-900 text-white text-xs font-semibold rounded-md px-4 py-2 hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:ring-offset-1">
+         Details
+        </button>
+       </li>
+      </ul>
+     </div>
+    </section>
+   </main>
+  </div>
+  <script>
+   // API Configuration
+   const API_BASE = 'http://localhost:4000';
+   
+   // Global variables
+   let allReports = [];
+   let filteredReports = [];
+   
+   // Fetch reports from database
+   async function fetchReports() {
+     try {
+       const response = await fetch(`${API_BASE}/reports`);
+       if (response.ok) {
+         allReports = await response.json();
+         filteredReports = [...allReports];
+         displayReports();
+         updateNotificationCount();
+       } else {
+         console.error('Failed to fetch reports');
+       }
+     } catch (error) {
+       console.error('Error fetching reports:', error);
+     }
+   }
+   
+   // Display reports in the UI
+   function displayReports() {
+     const todaySection = document.querySelector('.mb-6 ul');
+     const yesterdaySection = document.querySelector('.mb-6 + div ul');
+     
+     if (!todaySection || !yesterdaySection) return;
+     
+     // Clear existing content
+     todaySection.innerHTML = '';
+     yesterdaySection.innerHTML = '';
+     
+     const now = new Date();
+     const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+     const yesterday = new Date(today.getTime() - 24 * 60 * 60 * 1000);
+     
+     filteredReports.forEach(report => {
+       const reportDate = new Date(report.createdAt);
+       const reportDay = new Date(reportDate.getFullYear(), reportDate.getMonth(), reportDate.getDate());
+       
+       const timeAgo = getTimeAgo(reportDate);
+       const isToday = reportDay.getTime() === today.getTime();
+       const isYesterday = reportDay.getTime() === yesterday.getTime();
+       
+       if (isToday) {
+         todaySection.appendChild(createReportElement(report, timeAgo));
+       } else if (isYesterday) {
+         yesterdaySection.appendChild(createReportElement(report, timeAgo));
+       }
+     });
+   }
+   
+   // Create individual report element
+   function createReportElement(report, timeAgo) {
+     const li = document.createElement('li');
+     li.className = 'flex items-center px-4 py-3 space-x-4';
+     
+     const reporterName = report.contact || report.reporterId || 'Anonymous';
+     const issueType = report.kind || 'General Issue';
+     
+     li.innerHTML = `
+       <input aria-label="Select notification" class="w-4 h-4 rounded border-gray-300 text-purple-700 focus:ring-purple-600" type="checkbox"/>
+       <img alt="User profile" class="w-8 h-8 rounded-full flex-shrink-0" height="32" src="https://storage.googleapis.com/a1aa/image/e6a072fc-0ca0-4a72-6b79-791cd011a01f.jpg" width="32"/>
+       <p class="text-xs text-gray-700 flex-1">
+         <span class="font-bold">${reporterName}</span>
+         <span>${issueType}: ${report.description}</span>
+       </p>
+       <time class="text-xs text-gray-400 flex-shrink-0">${timeAgo}</time>
+       <button class="bg-gray-900 text-white text-xs font-semibold rounded-md px-4 py-2 hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:ring-offset-1" onclick="showReportDetails('${report._id}')">
+         Details
+       </button>
+     `;
+     
+     return li;
+   }
+   
+   // Show report details in a modal
+   function showReportDetails(reportId) {
+     const report = allReports.find(r => r._id === reportId);
+     if (!report) return;
+     
+     const modal = document.createElement('div');
+     modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+     modal.innerHTML = `
+       <div class="bg-white rounded-lg p-6 max-w-md w-full mx-4">
+         <div class="flex justify-between items-center mb-4">
+           <h3 class="text-lg font-semibold text-gray-900">Report Details</h3>
+           <button onclick="this.closest('.fixed').remove()" class="text-gray-400 hover:text-gray-600">
+             <i class="fas fa-times"></i>
+           </button>
+         </div>
+         <div class="space-y-3">
+           <div>
+             <label class="text-sm font-medium text-gray-700">Issue Type:</label>
+             <p class="text-sm text-gray-900">${report.kind}</p>
+           </div>
+           <div>
+             <label class="text-sm font-medium text-gray-700">Description:</label>
+             <p class="text-sm text-gray-900">${report.description}</p>
+           </div>
+           <div>
+             <label class="text-sm font-medium text-gray-700">Contact:</label>
+             <p class="text-sm text-gray-900">${report.contact || 'Not provided'}</p>
+           </div>
+           <div>
+             <label class="text-sm font-medium text-gray-700">Location:</label>
+             <p class="text-sm text-gray-900">${report.location.lat.toFixed(4)}, ${report.location.lng.toFixed(4)}</p>
+           </div>
+           <div>
+             <label class="text-sm font-medium text-gray-700">Status:</label>
+             <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+               report.status === 'new' ? 'bg-yellow-100 text-yellow-800' : 
+               report.status === 'in_progress' ? 'bg-blue-100 text-blue-800' : 
+               'bg-green-100 text-green-800'
+             }">${report.status}</span>
+           </div>
+           <div>
+             <label class="text-sm font-medium text-gray-700">Reported:</label>
+             <p class="text-sm text-gray-900">${new Date(report.createdAt).toLocaleString()}</p>
+           </div>
+         </div>
+         <div class="mt-6 flex justify-end space-x-3">
+           <button onclick="this.closest('.fixed').remove()" class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200">
+             Close
+           </button>
+           <button onclick="updateReportStatus('${report._id}')" class="px-4 py-2 text-sm font-medium text-white bg-purple-600 rounded-md hover:bg-purple-700">
+             Update Status
+           </button>
+         </div>
+       </div>
+     `;
+     
+     document.body.appendChild(modal);
+   }
+   
+   // Update report status
+   async function updateReportStatus(reportId) {
+     const statuses = ['new', 'in_progress', 'resolved'];
+     const currentReport = allReports.find(r => r._id === reportId);
+     const currentIndex = statuses.indexOf(currentReport.status);
+     const newStatus = statuses[(currentIndex + 1) % statuses.length];
+     
+     try {
+       const response = await fetch(`${API_BASE}/reports/${reportId}`, {
+         method: 'PATCH',
+         headers: { 'Content-Type': 'application/json' },
+         body: JSON.stringify({ status: newStatus })
+       });
+       
+       if (response.ok) {
+         currentReport.status = newStatus;
+         displayReports();
+         showMessage(`Status updated to: ${newStatus}`, 'success');
+       }
+     } catch (error) {
+       console.error('Error updating status:', error);
+       showMessage('Failed to update status', 'error');
+     }
+   }
+   
+   // Filter reports
+   function filterReports(filter) {
+     switch(filter) {
+       case 'all':
+         filteredReports = [...allReports];
+         break;
+       case 'read':
+         filteredReports = allReports.filter(r => r.status !== 'new');
+         break;
+       case 'unread':
+         filteredReports = allReports.filter(r => r.status === 'new');
+         break;
+     }
+     displayReports();
+   }
+   
+   // Get time ago string
+   function getTimeAgo(date) {
+     const now = new Date();
+     const diffMs = now - date;
+     const diffMins = Math.floor(diffMs / 60000);
+     const diffHours = Math.floor(diffMs / 3600000);
+     const diffDays = Math.floor(diffMs / 86400000);
+     
+     if (diffMins < 60) return `${diffMins} minutes ago`;
+     if (diffHours < 24) return `${diffHours} hours ago`;
+     if (diffDays < 7) return `${diffDays} days ago`;
+     return date.toLocaleDateString();
+   }
+   
+   // Update notification count
+   function updateNotificationCount() {
+     const unreadCount = allReports.filter(r => r.status === 'new').length;
+     const messageLink = document.querySelector('a[href="alter.html"] span');
+     if (messageLink) {
+       messageLink.textContent = `Message (${unreadCount})`;
+     }
+   }
+   
+   // Show message notification
+   function showMessage(message, type = 'info') {
+     const messageDiv = document.createElement('div');
+     messageDiv.className = `fixed top-4 right-4 px-6 py-3 rounded-md text-white z-50 ${
+       type === 'success' ? 'bg-green-600' : 
+       type === 'error' ? 'bg-red-600' : 'bg-blue-600'
+     }`;
+     messageDiv.textContent = message;
+     
+     document.body.appendChild(messageDiv);
+     setTimeout(() => messageDiv.remove(), 3000);
+   }
+   
+   // Initialize page
+   document.addEventListener('DOMContentLoaded', function() {
+     fetchReports();
+     
+     // Set up real-time updates every 30 seconds
+     setInterval(fetchReports, 30000);
+   });
+   
+   // Toggle Select dropdown
+    const selectBtn = document.getElementById('selectBtn');
+    const selectDropdown = document.getElementById('selectDropdown');
+    selectBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      selectDropdown.classList.toggle('hidden');
+      filterDropdown.classList.add('hidden');
+    });
+
+    // Toggle Filter dropdown
+    const filterBtn = document.getElementById('filterBtn');
+    const filterDropdown = document.getElementById('filterDropdown');
+    filterBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      filterDropdown.classList.toggle('hidden');
+      selectDropdown.classList.add('hidden');
+    });
+
+    // Close dropdowns on click outside
+    document.addEventListener('click', (e) => {
+      if (!selectBtn.contains(e.target) && !selectDropdown.contains(e.target)) {
+        selectDropdown.classList.add('hidden');
+      }
+      if (!filterBtn.contains(e.target) && !filterDropdown.contains(e.target)) {
+        filterDropdown.classList.add('hidden');
+      }
+    });
+    
+    // Add filter functionality
+    document.querySelectorAll('#filterDropdown a').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const filter = e.target.textContent.toLowerCase();
+        filterBtn.textContent = e.target.textContent;
+        filterReports(filter);
+        filterDropdown.classList.add('hidden');
+      });
+    });
+  </script>
+ </body>
+</html>

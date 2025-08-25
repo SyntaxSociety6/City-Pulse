@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SSE Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .event-log { background: #f8f9fa; padding: 15px; border-radius: 5px; max-height: 400px; overflow-y: auto; }
+        .event-item { margin: 10px 0; padding: 10px; border-left: 4px solid #007bff; background: white; }
+        .event-time { color: #666; font-size: 0.8em; }
+        .event-data { margin-top: 5px; font-family: monospace; }
+        button { padding: 10px 20px; margin: 5px; cursor: pointer; }
+        .status { padding: 10px; margin: 10px 0; border-radius: 5px; }
+        .connected { background: #d4edda; color: #155724; }
+        .disconnected { background: #f8d7da; color: #721c24; }
+    </style>
+</head>
+<body>
+    <h1>📡 Server-Sent Events Test</h1>
+    
+    <div class="status" id="connectionStatus">
+        <strong>Status:</strong> <span id="statusText">Disconnected</span>
+    </div>
+    
+    <div>
+        <button onclick="startSSE()">Start SSE Connection</button>
+        <button onclick="stopSSE()">Stop SSE Connection</button>
+        <button onclick="createTestEvent()">Create Test Event</button>
+        <button onclick="clearLog()">Clear Log</button>
+    </div>
+    
+    <h3>Event Log:</h3>
+    <div class="event-log" id="eventLog">
+        <div class="event-item">
+            <div class="event-time">Ready to test SSE connection...</div>
+        </div>
+    </div>
+
+    <script>
+        let eventSource = null;
+        let eventCount = 0;
+        
+        function updateStatus(connected, message) {
+            const statusDiv = document.getElementById('connectionStatus');
+            const statusText = document.getElementById('statusText');
+            
+            if (connected) {
+                statusDiv.className = 'status connected';
+                statusText.textContent = 'Connected';
+            } else {
+                statusDiv.className = 'status disconnected';
+                statusText.textContent = message || 'Disconnected';
+            }
+        }
+        
+        function addEvent(type, data) {
+            const eventLog = document.getElementById('eventLog');
+            const eventItem = document.createElement('div');
+            eventItem.className = 'event-item';
+            
+            const now = new Date().toLocaleTimeString();
+            eventCount++;
+            
+            eventItem.innerHTML = `
+                <div class="event-time">[${now}] Event #${eventCount}: ${type}</div>
+                <div class="event-data">${JSON.stringify(data, null, 2)}</div>
+            `;
+            
+            eventLog.appendChild(eventItem);
+            eventLog.scrollTop = eventLog.scrollHeight;
+        }
+        
+        function startSSE() {
+            if (eventSource) {
+                eventSource.close();
+            }
+            
+            try {
+                eventSource = new EventSource('http://localhost:4000/events');
+                
+                eventSource.onopen = function(event) {
+                    updateStatus(true, 'Connected');
+                    addEvent('Connection Opened', { message: 'SSE connection established' });
+                };
+                
+                eventSource.onmessage = function(event) {
+                    try {
+                        const data = JSON.parse(event.data);
+                        addEvent('Message', data);
+                    } catch (e) {
+                        addEvent('Message (Raw)', event.data);
+                    }
+                };
+                
+                eventSource.addEventListener('hello', function(event) {
+                    try {
+                        const data = JSON.parse(event.data);
+                        addEvent('Hello Event', data);
+                    } catch (e) {
+                        addEvent('Hello Event (Raw)', event.data);
+                    }
+                });
+                
+                eventSource.addEventListener('report.created', function(event) {
+                    try {
+                        const data = JSON.parse(event.data);
+                        addEvent('Report Created', data);
+                    } catch (e) {
+                        addEvent('Report Created (Raw)', event.data);
+                    }
+                });
+                
+                eventSource.addEventListener('project.created', function(event) {
+                    try {
+                        const data = JSON.parse(event.data);
+                        addEvent('Project Created', data);
+                    } catch (e) {
+                        addEvent('Project Created (Raw)', event.data);
+                    }
+                });
+                
+                eventSource.addEventListener('alert.created', function(event) {
+                    try {
+                        const data = JSON.parse(event.data);
+                        addEvent('Alert Created', data);
+                    } catch (e) {
+                        addEvent('Alert Created (Raw)', event.data);
+                    }
+                });
+                
+                eventSource.addEventListener('congestion.created', function(event) {
+                    try {
+                        const data = JSON.parse(event.data);
+                        addEvent('Congestion Created', data);
+                    } catch (e) {
+                        addEvent('Congestion Created (Raw)', event.data);
+                    }
+                });
+                
+                eventSource.onerror = function(event) {
+                    updateStatus(false, 'Connection Error');
+                    addEvent('Error', { message: 'SSE connection error', event: event.type });
+                };
+                
+            } catch (error) {
+                updateStatus(false, 'Failed to connect');
+                addEvent('Error', { message: 'Failed to create SSE connection', error: error.message });
+            }
+        }
+        
+        function stopSSE() {
+            if (eventSource) {
+                eventSource.close();
+                eventSource = null;
+                updateStatus(false, 'Manually disconnected');
+                addEvent('Info', { message: 'SSE connection manually closed' });
+            }
+        }
+        
+        async function createTestEvent() {
+            try {
+                const testReport = {
+                    kind: 'sse_test',
+                    description: 'Test report to trigger SSE event',
+                    location: {
+                        lat: 28.6139 + (Math.random() - 0.5) * 0.01,
+                        lng: 77.2090 + (Math.random() - 0.5) * 0.01
+                    },
+                    reporterId: 'sse_test_user',
+                    contact: 'sse@test.com'
+                };
+                
+                const response = await fetch('http://localhost:4000/reports', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(testReport)
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    addEvent('Test Report Created', data);
+                } else {
+                    const errorData = await response.text();
+                    addEvent('Test Report Failed', { error: errorData });
+                }
+            } catch (error) {
+                addEvent('Test Report Error', { error: error.message });
+            }
+        }
+        
+        function clearLog() {
+            const eventLog = document.getElementById('eventLog');
+            eventLog.innerHTML = '<div class="event-item"><div class="event-time">Log cleared...</div></div>';
+            eventCount = 0;
+        }
+        
+        // Auto-start SSE connection
+        window.onload = function() {
+            setTimeout(startSSE, 1000);
+        };
+        
+        // Clean up on page unload
+        window.onbeforeunload = function() {
+            if (eventSource) {
+                eventSource.close();
+            }
+        };
+    </script>
+</body>
+</html>

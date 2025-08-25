@@ -1,0 +1,39 @@
+{
+  "name": "citypulse-urban-growth-tracker",
+  "version": "1.0.0",
+  "description": "CityPulse - Urban Growth & Infrastructure Tracker - A comprehensive platform for monitoring urban development, traffic patterns, and infrastructure projects",
+  "main": "backend/server.js",
+  "homepage": "https://ayush.github.io/citypulse-urban-growth-tracker/",
+  "scripts": {
+    "start": "node backend/server.js",
+    "dev": "nodemon backend/server.js",
+    "build": "echo 'Frontend is already built (static HTML/CSS/JS)'",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d public",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "urban-planning",
+    "infrastructure",
+    "traffic-monitoring",
+    "city-development",
+    "smart-cities",
+    "gis",
+    "dashboard"
+  ],
+  "author": "Ayush",
+  "license": "MIT",
+  "type": "commonjs",
+  "dependencies": {
+    "mongoose": "^8.17.2",
+    "node-fetch": "^2.7.0",
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.2"
+  },
+  "devDependencies": {
+    "gh-pages": "^6.1.0",
+    "nodemon": "^3.0.1"
+  }
+}

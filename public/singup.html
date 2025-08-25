@@ -1,0 +1,302 @@
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1" name="viewport"/>
+  <title>Sign Up</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet"/>
+  <style>
+    body {
+      font-family: "Inter", sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* === Background Video Styling === */
+    #bg-video {
+      position: fixed;
+      top: 0;
+      left: 0;
+      min-width: 100%;
+      min-height: 100%;
+      object-fit: cover;   /* make video cover whole screen */
+      z-index: -1;         /* video behind everything */
+      filter: brightness(0.6); /* optional dim effect for readability */
+    }
+
+    /* Overlay for better readability */
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.3); /* semi-transparent overlay */
+      z-index: -1;
+    }
+
+    /* Success message styling */
+    .success-message {
+      background: rgba(34, 197, 94, 0.9);
+      color: white;
+      padding: 1rem;
+      border-radius: 0.5rem;
+      margin-bottom: 1rem;
+      text-align: center;
+      font-weight: 600;
+    }
+
+    /* Error message styling */
+    .error-message {
+      background: rgba(239, 68, 68, 0.9);
+      color: white;
+      padding: 1rem;
+      border-radius: 0.5rem;
+      margin-bottom: 1rem;
+      text-align: center;
+      font-weight: 600;
+    }
+
+    /* Loading state */
+    .loading {
+      opacity: 0.7;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+  
+  <!-- === Background Video Element === -->
+  <video autoplay muted loop id="bg-video">
+    <source src="video1.mp4" type="video/mp4" />
+    <!-- fallback text -->
+    Your browser does not support HTML5 video.
+  </video>
+  <div class="overlay"></div>
+
+  <!-- Page Content -->
+  <div class="min-h-screen flex items-center justify-center p-6">
+    <div class="max-w-4xl w-full rounded-xl bg-white/20 backdrop-blur-md border border-white/30 p-8 flex flex-col md:flex-row gap-8 md:gap-16">
+      
+      <!-- Left Side Form -->
+      <div class="flex flex-col justify-center flex-1 max-w-md">
+        <h2 class="text-black font-extrabold text-2xl mb-8">Sign Up</h2>
+        
+        <!-- Messages Container -->
+        <div id="messages"></div>
+        
+        <form id="signupForm" class="space-y-4">
+          <input 
+            type="text" 
+            id="fullName"
+            name="fullName"
+            placeholder="Full Name" 
+            class="w-full rounded-full py-3 px-5 text-gray-600 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+            required
+          />
+          <input 
+            type="email" 
+            id="email"
+            name="email"
+            placeholder="Email Address" 
+            class="w-full rounded-full py-3 px-5 text-gray-600 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+            required
+          />
+          <input 
+            type="password" 
+            id="password"
+            name="password"
+            placeholder="Password" 
+            class="w-full rounded-full py-3 px-5 text-gray-600 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+            required
+            minlength="6"
+          />
+          <input 
+            type="password" 
+            id="confirmPassword"
+            name="confirmPassword"
+            placeholder="Confirm Password" 
+            class="w-full rounded-full py-3 px-5 text-gray-600 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+            required
+            minlength="6"
+          />
+        </form>
+      </div>
+
+      <!-- Right Side Actions -->
+      <div class="flex flex-col justify-center flex-1 max-w-md space-y-6">
+        <button 
+          id="signupBtn"
+          class="w-full bg-black text-white font-semibold rounded-full py-3 px-8 text-center hover:bg-gray-800 transition-colors"
+          onclick="handleSignup()"
+        >
+          Sign Up
+        </button>
+        <p class="text-xs text-black text-center">
+          Already have an account?
+          <a href="#" class="font-bold underline">Log in</a>
+        </p>
+        <p class="text-black text-center text-sm">Or</p>
+        <button class="w-full flex items-center justify-center gap-3 rounded-full border border-black/50 py-2 px-4 text-white text-sm hover:bg-black/10 transition-colors">
+          <i class="fab fa-google text-red-600 text-base"></i>
+          Sign up with Google
+        </button>
+        <button class="w-full flex items-center justify-center gap-3 rounded-full border border-black/50 py-2 px-4 text-white text-sm hover:bg-black/10 transition-colors">
+          <i class="fab fa-facebook-f text-blue-700 text-base"></i>
+          Sign up with Facebook
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // API Configuration
+    const USER_API_BASE = 'http://localhost:5000';
+    
+    // Form elements
+    const signupForm = document.getElementById('signupForm');
+    const signupBtn = document.getElementById('signupBtn');
+    const messagesContainer = document.getElementById('messages');
+    
+    // Show message function
+    function showMessage(message, type = 'info') {
+      const messageDiv = document.createElement('div');
+      messageDiv.className = type === 'success' ? 'success-message' : 'error-message';
+      messageDiv.textContent = message;
+      
+      // Clear previous messages
+      messagesContainer.innerHTML = '';
+      messagesContainer.appendChild(messageDiv);
+      
+      // Auto-remove after 5 seconds
+      setTimeout(() => {
+        if (messageDiv.parentNode) {
+          messageDiv.remove();
+        }
+      }, 5000);
+    }
+    
+    // Clear messages
+    function clearMessages() {
+      messagesContainer.innerHTML = '';
+    }
+    
+    // Form validation
+    function validateForm() {
+      const fullName = document.getElementById('fullName').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+      
+      if (!fullName) {
+        showMessage('Please enter your full name', 'error');
+        return false;
+      }
+      
+      if (!email) {
+        showMessage('Please enter your email address', 'error');
+        return false;
+      }
+      
+      if (!email.includes('@')) {
+        showMessage('Please enter a valid email address', 'error');
+        return false;
+      }
+      
+      if (password.length < 6) {
+        showMessage('Password must be at least 6 characters long', 'error');
+        return false;
+      }
+      
+      if (password !== confirmPassword) {
+        showMessage('Passwords do not match', 'error');
+        return false;
+      }
+      
+      return true;
+    }
+    
+    // Handle signup
+    async function handleSignup() {
+      if (!validateForm()) {
+        return;
+      }
+      
+      // Clear previous messages
+      clearMessages();
+      
+      // Get form data
+      const formData = {
+        fullName: document.getElementById('fullName').value.trim(),
+        email: document.getElementById('email').value.trim(),
+        password: document.getElementById('password').value,
+        confirmPassword: document.getElementById('confirmPassword').value
+      };
+      
+      try {
+        // Show loading state
+        signupBtn.disabled = true;
+        signupBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Signing Up...';
+        signupForm.classList.add('loading');
+        
+        // Send request to server
+        const response = await fetch(`${USER_API_BASE}/api/auth/signup`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(formData)
+        });
+        
+        const result = await response.json();
+        
+        if (response.ok) {
+          // Success
+          showMessage('Account created successfully! Welcome to CityPulse!', 'success');
+          
+          // Store token in localStorage
+          localStorage.setItem('citypulse_token', result.token);
+          localStorage.setItem('citypulse_user', JSON.stringify(result.user));
+          
+          // Reset form
+          signupForm.reset();
+          
+          // Redirect to main page after 2 seconds
+          setTimeout(() => {
+            window.location.href = 'Main.html';
+          }, 2000);
+          
+        } else {
+          // Error from server
+          showMessage(result.error || 'Signup failed. Please try again.', 'error');
+        }
+        
+      } catch (error) {
+        console.error('Signup error:', error);
+        showMessage('Network error. Please check your connection and try again.', 'error');
+      } finally {
+        // Reset button state
+        signupBtn.disabled = false;
+        signupBtn.innerHTML = 'Sign Up';
+        signupForm.classList.remove('loading');
+      }
+    }
+    
+    // Enter key support
+    signupForm.addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        handleSignup();
+      }
+    });
+    
+    // Check if user is already logged in
+    window.addEventListener('DOMContentLoaded', function() {
+      const token = localStorage.getItem('citypulse_token');
+      if (token) {
+        // User is already logged in, redirect to main page
+        window.location.href = 'Main.html';
+      }
+    });
+  </script>
+
+</body>
+</html>

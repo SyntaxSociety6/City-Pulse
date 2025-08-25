@@ -1,0 +1,1291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CityPulse - Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #06b6d4;
+            --accent: #f43f5e;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --purple: #a855f7;
+            --pink: #ec4899;
+            --dark-bg: rgba(15, 23, 42, 0.85);
+            --dark-card: rgba(30, 41, 59, 0.9);
+            --dark-border: rgba(51, 65, 85, 0.6);
+            --dark-text: #f1f5f9;
+            --dark-muted: #94a3b8;
+            --sidebar-width: 280px;
+            --header-height: 70px;
+        }
+
+        body {
+            background: url('https://images.unsplash.com/photo-1446776653964-20c1d3a81b06?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2071&q=80') no-repeat center center fixed;
+            background-size: cover;
+            color: var(--dark-text);
+            display: flex;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: -1;
+        }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(10px);
+            color: var(--dark-text);
+            padding: 1.5rem 1rem;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            border-right: 1px solid var(--dark-border);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 2rem;
+            padding: 0 0.5rem;
+        }
+
+        .logo i {
+            font-size: 2rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .logo h1 {
+            font-weight: 700;
+            font-size: 1.5rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-section {
+            margin-bottom: 2rem;
+        }
+
+        .nav-section h3 {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 1rem;
+            padding: 0 0.5rem;
+            color: var(--dark-muted);
+        }
+
+        .nav-links {
+            list-style: none;
+        }
+
+        .nav-links li {
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-links a {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: var(--dark-text);
+            text-decoration: none;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            transition: all 0.3s;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(6, 182, 212, 0.2));
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .nav-links i {
+            font-size: 1.25rem;
+            width: 24px;
+            text-align: center;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        .header {
+            height: var(--header-height);
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 0 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+            border-bottom: 1px solid var(--dark-border);
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background: rgba(30, 41, 59, 0.6);
+            border-radius: 0.5rem;
+            padding: 0.5rem 1rem;
+            width: 300px;
+            border: 1px solid var(--dark-border);
+        }
+
+        .search-bar i {
+            color: var(--dark-muted);
+            margin-right: 0.5rem;
+        }
+
+        .search-bar input {
+            border: none;
+            background: transparent;
+            outline: none;
+            width: 100%;
+            font-size: 0.95rem;
+            color: var(--dark-text);
+        }
+
+        .user-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .notification-btn {
+            position: relative;
+            background: none;
+            border: none;
+            color: var(--dark-text);
+            font-size: 1.25rem;
+            cursor: pointer;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: linear-gradient(135deg, var(--accent), var(--pink));
+            color: white;
+            font-size: 0.7rem;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        /* Content Area */
+        .content {
+            flex: 1;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .dashboard-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .date-filter {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            border: 1px solid var(--dark-border);
+        }
+
+        .date-filter select {
+            background: transparent;
+            border: none;
+            color: var(--dark-text);
+            outline: none;
+            cursor: pointer;
+        }
+
+        /* Stats Overview */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--dark-border);
+            transition: transform 0.3s, box-shadow 0.3s;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .bg-primary {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(6, 182, 212, 0.2));
+            color: var(--primary);
+        }
+
+        .bg-success {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(5, 150, 105, 0.2));
+            color: var(--success);
+        }
+
+        .bg-warning {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(217, 119, 6, 0.2));
+            color: var(--warning);
+        }
+
+        .bg-danger {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(220, 38, 38, 0.2));
+            color: var(--danger);
+        }
+
+        .stat-trend {
+            font-size: 0.85rem;
+            font-weight: 600;
+            padding: 0.25rem 0.5rem;
+            border-radius: 1rem;
+        }
+
+        .trend-up {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--success);
+        }
+
+        .trend-down {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--danger);
+        }
+
+        .stat-value {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--dark-muted);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-comparison {
+            font-size: 0.8rem;
+            color: var(--dark-muted);
+            margin-top: auto;
+        }
+
+        /* Charts Section */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .chart-card {
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--dark-border);
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .chart-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--dark-text);
+        }
+
+        .chart-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .chart-action-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 0.5rem;
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid var(--dark-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--dark-text);
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+
+        .chart-action-btn:hover {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 250px;
+            width: 100%;
+        }
+
+        /* Projects Section */
+        .projects-section {
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--dark-border);
+            margin-bottom: 2rem;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--dark-text);
+        }
+
+        .view-all {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .projects-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .projects-table th {
+            text-align: left;
+            padding: 0.75rem 1rem;
+            color: var(--dark-muted);
+            font-weight: 500;
+            font-size: 0.85rem;
+            border-bottom: 1px solid var(--dark-border);
+        }
+
+        .projects-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--dark-border);
+        }
+
+        .projects-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .project-name {
+            font-weight: 500;
+            color: var(--dark-text);
+        }
+
+        .project-details {
+            font-size: 0.85rem;
+            color: var(--dark-muted);
+            margin-top: 0.25rem;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.35rem 0.75rem;
+            border-radius: 1rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .status-ongoing {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(217, 119, 6, 0.2));
+            color: var(--warning);
+        }
+
+        .status-completed {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(5, 150, 105, 0.2));
+            color: var(--success);
+        }
+
+        .status-delayed {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(220, 38, 38, 0.2));
+            color: var(--danger);
+        }
+
+        .progress-bar {
+            height: 6px;
+            background: rgba(30, 41, 59, 0.6);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 0.5rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 3px;
+        }
+
+        .progress-75 {
+            width: 75%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+        }
+
+        .progress-90 {
+            width: 90%;
+            background: linear-gradient(135deg, var(--success), #059669);
+        }
+
+        .progress-60 {
+            width: 60%;
+            background: linear-gradient(135deg, var(--warning), #ea580c);
+        }
+
+        /* Activity Section */
+        .activity-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .activity-card {
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--dark-border);
+        }
+
+        .activity-list {
+            list-style: none;
+        }
+
+        .activity-item {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--dark-border);
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-title {
+            font-weight: 500;
+            color: var(--dark-text);
+            margin-bottom: 0.25rem;
+        }
+
+        .activity-desc {
+            font-size: 0.85rem;
+            color: var(--dark-muted);
+            margin-bottom: 0.5rem;
+        }
+
+        .activity-time {
+            font-size: 0.75rem;
+            color: var(--dark-muted);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .activity-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 80px;
+                padding: 1rem 0.5rem;
+            }
+            
+            .logo h1, .nav-section h3, .nav-links span {
+                display: none;
+            }
+            
+            .logo {
+                justify-content: center;
+            }
+            
+            .nav-links a {
+                justify-content: center;
+                padding: 0.75rem;
+            }
+            
+            .nav-links i {
+                font-size: 1.5rem;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .search-bar {
+                width: 200px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .header {
+                padding: 0 1rem;
+            }
+            
+            .search-bar {
+                display: none;
+            }
+            
+            .dashboard-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            
+            .content {
+                padding: 1rem;
+            }
+            
+            .projects-table {
+                display: block;
+                overflow-x: auto;
+            }
+        }
+
+        /* Report Button */
+        .report-btn {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            box-shadow: 0 8px 20px rgba(99, 102, 241, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            z-index: 100;
+        }
+
+        .report-btn:hover {
+            transform: scale(1.1) rotate(90deg);
+            box-shadow: 0 12px 25px rgba(99, 102, 241, 0.5);
+        }
+        /* Footer Styles (from Footer.html, adapted) */
+        footer {
+            background-color: #15202B;
+            color: #AAB8C2;
+            padding: 40px 20px;
+            margin-top: auto;
+            border-top: 1px solid var(--dark-border);
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px 0;
+            border-bottom: 1px solid #38444D;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .social-links a {
+            color: #AAB8C2;
+            margin: 0 10px;
+            font-size: 1.2rem;
+            transition: color 0.3s;
+            text-decoration: none;
+        }
+
+        .social-links a:hover {
+            color: #ffffff;
+        }
+
+        .logo-section {
+            text-align: center;
+            padding: 30px 0;
+        }
+
+        .logo-section img {
+            height: 30px;
+            margin-bottom: 10px;
+        }
+
+        .footer-nav {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            padding: 20px 0;
+            font-size: 0.9rem;
+            gap: 10px;
+        }
+
+        .footer-nav a {
+            color: #AAB8C2;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-nav a:hover {
+            color: #ffffff;
+            text-decoration: underline;
+        }
+
+        .footer-nav span {
+            color: #38444D;
+        }
+
+        @media (max-width: 768px) {
+            .footer-nav {
+                flex-direction: column;
+                align-items: center;
+                gap: 10px;
+            }
+            .footer-nav span {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+        <div class="logo">
+            <i class="fas fa-city"></i>
+            <h1>CITY PULSE</h1>
+        </div>
+        
+        <div class="nav-section">
+            <h3>Main</h3>
+            <ul class="nav-links">
+                <li><a href="#" class="active"><i class="fas fa-chart-line"></i> <span>Dashboard</span></a></li>
+                <li><a href="index.html"><i class="fas fa-map"></i> <span>Map View</span></a></li>
+                <li><a href="Infrastructure.html"><i class="fas fa-road"></i> <span>Infrastructure</span></a></li>
+                <li><a href="Growth Metrics Interface.html"><i class="fas fa-home"></i> <span>Real Estate</span></a></li>
+            </ul>
+        </div>
+        
+        <div class="nav-section">
+            <h3>Analytics</h3>
+            <ul class="nav-links">
+                <li><a href="Traffic Patterns Interface.html"><i class="fas fa-traffic-light"></i> <span>Traffic Patterns</span></a></li>
+                <li><a href="Growth Metrics Interface.html"><i class="fas fa-chart-bar"></i> <span>Growth Metrics</span></a></li>
+                <li><a href="index.html"><i class="fas fa-exclamation-triangle"></i> <span>Home</span></a></li>
+                <li><a href="setting.html"><i class="fas fa-tasks"></i> <span>Setting</span></a></li>
+            </ul>
+        </div>
+        
+        <div class="nav-section">
+            <h3>User</h3>
+            <ul class="nav-links">
+                <li><a href="alter.html"><i class="fas fa-bell"></i> <span>Alerts</span></a></li>
+                <li><a href="Real Estate.html"><i class="fas fa-comment"></i> <span>Reports</span></a></li>
+                <li><a href="setting.html"><i class="fas fa-cog"></i> <span>Settings</span></a></li>
+                <li><a href="singup.html"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a></li>
+            </ul>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Header -->
+        <header class="header">
+            <div class="search-bar">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search for data, reports, or insights...">
+            </div>
+            
+            <div class="user-actions">
+                <button class="notification-btn">
+                    <i class="fas fa-bell"></i>
+                    <span ><a href="alter.html"  class="notification-badge">3</a></span>
+                </button>
+                
+                <div class="user-profile">
+                    <div ><a href="singup.html"    class="user-avatar">Login</a></div>
+                    <div>
+                        <div class="user-name">Indian citizens</div>
+                        <div class="user-role">Urban Analyst</div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Content Area -->
+        <div class="content">
+            <div class="dashboard-header">
+                <h1 class="dashboard-title">Urban Analytics Dashboard</h1>
+                <div class="date-filter">
+                    <i class="fas fa-calendar"></i>
+                    <select>
+                        <option>Last 7 Days</option>
+                        <option>Last 30 Days</option>
+                        <option>Last 90 Days</option>
+                        <option selected>Year to Date</option>
+                        <option>Custom Range</option>
+                    </select>
+                </div>
+            </div>
+            
+            <!-- Stats Overview -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon bg-primary">
+                            <i class="fas fa-road"></i>
+                        </div>
+                        <span class="stat-trend trend-up">+12%</span>
+                    </div>
+                    <div class="stat-value">42</div>
+                    <div class="stat-label">Active Infrastructure Projects</div>
+                    <div class="stat-comparison">+5 from last month</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon bg-success">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <span class="stat-trend trend-up">+8%</span>
+                    </div>
+                    <div class="stat-value">28</div>
+                    <div class="stat-label">Completed Projects This Year</div>
+                    <div class="stat-comparison">+3 from last quarter</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon bg-warning">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <span class="stat-trend trend-down">-3%</span>
+                    </div>
+                    <div class="stat-value">17</div>
+                    <div class="stat-label">Reported Hazards</div>
+                    <div class="stat-comparison">-2 from last week</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon bg-danger">
+                            <i class="fas fa-traffic-jam"></i>
+                        </div>
+                        <span class="stat-trend trend-up">+5%</span>
+                    </div>
+                    <div class="stat-value">9</div>
+                    <div class="stat-label">Congestion Points</div>
+                    <div class="stat-comparison">+1 from yesterday</div>
+                </div>
+            </div>
+            
+            <!-- Charts Section -->
+            <div class="charts-grid">
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3 class="chart-title">Urban Growth Trends</h3>
+                        <div class="chart-actions">
+                            <button class="chart-action-btn"><i class="fas fa-download"></i></button>
+                            <button class="chart-action-btn"><i class="fas fa-expand"></i></button>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="growthChart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3 class="chart-title">Issue Distribution</h3>
+                        <div class="chart-actions">
+                            <button class="chart-action-btn"><i class="fas fa-download"></i></button>
+                            <button class="chart-action-btn"><i class="fas fa-expand"></i></button>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="issueChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Projects Section -->
+            <div class="projects-section">
+                <div class="section-header">
+                    <h2 class="section-title">Active Infrastructure Projects</h2>
+                    <a href="#" class="view-all">
+                        View All <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+                
+                <table class="projects-table">
+                    <thead>
+                        <tr>
+                            <th>Project Name</th>
+                            <th>Type</th>
+                            <th>Status</th>
+                            <th>Progress</th>
+                            <th>Timeline</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="project-name">Riverfront Bridge Expansion</div>
+                                <div class="project-details">Central District</div>
+                            </td>
+                            <td>Transportation</td>
+                            <td><span class="status-badge status-ongoing">Ongoing</span></td>
+                            <td>
+                                <div>75% Complete</div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill progress-75"></div>
+                                </div>
+                            </td>
+                            <td>Dec 2023</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="project-name">Northside Park Renovation</div>
+                                <div class="project-details">North District</div>
+                            </td>
+                            <td>Public Space</td>
+                            <td><span class="status-badge status-completed">Completed</span></td>
+                            <td>
+                                <div>100% Complete</div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill progress-90"></div>
+                                </div>
+                            </td>
+                            <td>Aug 2023</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="project-name">Central Metro Station</div>
+                                <div class="project-details">Downtown</div>
+                            </td>
+                            <td>Transportation</td>
+                            <td><span class="status-badge status-delayed">Delayed</span></td>
+                            <td>
+                                <div>60% Complete</div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill progress-60"></div>
+                                </div>
+                            </td>
+                            <td>Mar 2024</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Activity Section -->
+            <div class="activity-grid">
+                <div class="activity-card">
+                    <div class="chart-header">
+                        <h3 class="chart-title">Recent Alerts</h3>
+                        <a href="#" class="view-all">
+                            View All <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                    <ul class="activity-list">
+                        <li class="activity-item">
+                            <div class="activity-icon bg-danger">
+                                <i class="fas fa-exclamation-circle"></i>
+                            </div>
+                            <div class="activity-content">
+                                <h4 class="activity-title">Road Closure</h4>
+                                <p class="activity-desc">Main Street closed between 5th and 7th Ave until Friday</p>
+                                <div class="activity-time">10 min ago</div>
+                            </div>
+                        </li>
+                        <li class="activity-item">
+                            <div class="activity-icon bg-warning">
+                                <i class="fas fa-traffic-light"></i>
+                            </div>
+                            <div class="activity-content">
+                                <h4 class="activity-title">Traffic Bottleneck</h4>
+                                <p class="activity-desc">Heavy congestion reported at Central Square</p>
+                                <div class="activity-time">45 min ago</div>
+                            </div>
+                        </li>
+                        <li class="activity-item">
+                            <div class="activity-icon bg-primary">
+                                <i class="fas fa-bolt"></i>
+                            </div>
+                            <div class="activity-content">
+                                <h4 class="activity-title">Power Outage</h4>
+                                <p class="activity-desc">Reported in Downtown area - crew dispatched</p>
+                                <div class="activity-time">1 hour ago</div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="activity-card">
+                    <div class="chart-header">
+                        <h3 class="chart-title">System Metrics</h3>
+                        <a href="#" class="view-all">
+                            View Details <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="metricsChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Footer -->
+        <footer>
+            <div class="footer-container">
+                <div class="social-links">
+                    <a aria-label="Facebook" href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a aria-label="Instagram" href="#"><i class="fab fa-instagram"></i></a>
+                    <a aria-label="YouTube" href="#"><i class="fab fa-youtube"></i></a>
+                    <a aria-label="X" href="#"><i class="fab fa-x-twitter"></i></a>
+                    <a aria-label="LinkedIn" href="#"><i class="fab fa-linkedin-in"></i></a>
+                    <a aria-label="Medium" href="#"><i class="fab fa-medium-m"></i></a>
+                    <a aria-label="TikTok" href="#"><i class="fab fa-tiktok"></i></a>
+                </div>
+                <div class="logo-section">
+                    <p>Copyright ©️ 2025 CityPulse, Inc.</p>
+                </div>
+                <nav class="footer-nav">
+                    <a href="#">Legal Stuff</a>
+                    <span>|</span>
+                    <a href="#">Privacy Policy</a>
+                    <span>|</span>
+                    <a href="#">Security</a>
+                    <span>|</span>
+                    <a href="#">Website Accessibility</a>
+                    <span>|</span>
+                    <a href="#">Manage Cookies</a>
+                    <span>|</span>
+                    <a href="#">Your Privacy Choices</a>
+                </nav>
+            </div>
+        </footer>
+    </main>
+
+    <!-- Report Button -->
+    <button class="report-btn">
+        <i class="fas fa-plus"></i>
+    </button>
+
+    <script>
+        // Initialize charts
+        document.addEventListener('DOMContentLoaded', function() {
+            // Growth Trends Chart
+            const growthCtx = document.getElementById('growthChart').getContext('2d');
+            const growthChart = new Chart(growthCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                    datasets: [
+                        {
+                            label: 'Infrastructure Projects',
+                            data: [12, 19, 15, 22, 18, 24, 28, 32, 35, 38, 40, 42],
+                            borderColor: '#6366f1',
+                            backgroundColor: 'rgba(99, 102, 241, 0.1)',
+                            tension: 0.3,
+                            fill: true
+                        },
+                        {
+                            label: 'Reported Issues',
+                            data: [20, 25, 18, 15, 12, 14, 16, 18, 15, 17, 16, 17],
+                            borderColor: '#f43f5e',
+                            backgroundColor: 'rgba(244, 63, 94, 0.1)',
+                            tension: 0.3,
+                            fill: true
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                color: '#f1f5f9'
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(148, 163, 184, 0.2)'
+                            },
+                            ticks: {
+                                color: '#94a3b8'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                color: 'rgba(148, 163, 184, 0.2)'
+                            },
+                            ticks: {
+                                color: '#94a3b8'
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Issue Distribution Chart
+            const issueCtx = document.getElementById('issueChart').getContext('2d');
+            const issueChart = new Chart(issueCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Traffic', 'Power', 'Water', 'Road Damage', 'Sewage'],
+                    datasets: [{
+                        data: [35, 20, 15, 18, 12],
+                        backgroundColor: [
+                            '#6366f1',
+                            '#06b6d4',
+                            '#10b981',
+                            '#f59e0b',
+                            '#ef4444'
+                        ],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                color: '#f1f5f9',
+                                padding: 15
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // System Metrics Chart
+            const metricsCtx = document.getElementById('metricsChart').getContext('2d');
+            const metricsChart = new Chart(metricsCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Data Accuracy', 'API Uptime', 'Response Time', 'User Satisfaction'],
+                    datasets: [{
+                        data: [92, 99, 95, 88],
+                        backgroundColor: [
+                            'rgba(99, 102, 241, 0.7)',
+                            'rgba(16, 185, 129, 0.7)',
+                            'rgba(245, 158, 11, 0.7)',
+                            'rgba(6, 182, 212, 0.7)'
+                        ],
+                        borderWidth: 0,
+                        borderRadius: 5
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            grid: {
+                                color: 'rgba(148, 163, 184, 0.2)'
+                            },
+                            ticks: {
+                                color: '#94a3b8'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                color: '#94a3b8'
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Simulate real-time updates
+            setInterval(() => {
+                // Randomly update some stats for demo purposes
+                const randomValue = Math.floor(Math.random() * 5) + 1;
+                document.querySelectorAll('.stat-value')[0].textContent = 42 + randomValue;
+                
+                // Add a new alert
+                const alerts = [
+                    {icon: 'exclamation-circle', title: 'Road Closure', desc: 'Oak Street closed for emergency repairs', type: 'danger'},
+                    {icon: 'traffic-light', title: 'Traffic Alert', desc: 'Accident reported on Highway 42', type: 'warning'},
+                    {icon: 'bolt', title: 'Power Restored', desc: 'Power restored in Downtown area', type: 'success'}
+                ];
+                
+                const alert = alerts[Math.floor(Math.random() * alerts.length)];
+                const activityList = document.querySelector('.activity-list');
+                const newAlert = document.createElement('li');
+                newAlert.className = 'activity-item';
+                newAlert.innerHTML = `
+                    <div class="activity-icon bg-${alert.type}">
+                        <i class="fas fa-${alert.icon}"></i>
+                    </div>
+                    <div class="activity-content">
+                        <h4 class="activity-title">${alert.title}</h4>
+                        <p class="activity-desc">${alert.desc}</p>
+                        <div class="activity-time">Just now</div>
+                    </div>
+                `;
+                
+                activityList.insertBefore(newAlert, activityList.firstChild);
+                
+                // Remove the oldest alert if there are more than 3
+                if (activityList.children.length > 3) {
+                    activityList.removeChild(activityList.lastChild);
+                }
+            }, 10000);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frontend Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-section { margin: 20px 0; padding: 20px; border: 1px solid #ccc; border-radius: 5px; }
+        .success { background-color: #d4edda; border-color: #c3e6cb; }
+        .error { background-color: #f8d7da; border-color: #f5c6cb; }
+        button { padding: 10px 20px; margin: 5px; cursor: pointer; }
+        pre { background: #f8f9fa; padding: 10px; border-radius: 3px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>🧪 CityPulse Frontend Test</h1>
+    
+    <div class="test-section">
+        <h3>1. Health Check</h3>
+        <button onclick="testHealth()">Test Health Endpoint</button>
+        <div id="healthResult"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>2. Get State</h3>
+        <button onclick="testGetState()">Test Get State</button>
+        <div id="stateResult"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>3. Create Test Report</h3>
+        <button onclick="testCreateReport()">Test Create Report</button>
+        <div id="reportResult"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>4. Get Reports</h3>
+        <button onclick="testGetReports()">Test Get Reports</button>
+        <div id="reportsResult"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>5. Test Map Integration</h3>
+        <button onclick="testMapIntegration()">Test Map Functions</button>
+        <div id="mapResult"></div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:4000';
+        
+        function showResult(elementId, data, isSuccess = true) {
+            const element = document.getElementById(elementId);
+            element.className = `test-section ${isSuccess ? 'success' : 'error'}`;
+            element.innerHTML = `
+                <h3>${isSuccess ? '✅ Success' : '❌ Error'}</h3>
+                <pre>${JSON.stringify(data, null, 2)}</pre>
+            `;
+        }
+        
+        async function testHealth() {
+            try {
+                const response = await fetch(`${API_BASE}/health`);
+                const data = await response.json();
+                showResult('healthResult', data, response.ok);
+            } catch (error) {
+                showResult('healthResult', { error: error.message }, false);
+            }
+        }
+        
+        async function testGetState() {
+            try {
+                const response = await fetch(`${API_BASE}/state`);
+                const data = await response.json();
+                showResult('stateResult', data, response.ok);
+            } catch (error) {
+                showResult('stateResult', { error: error.message }, false);
+            }
+        }
+        
+        async function testCreateReport() {
+            try {
+                const testReport = {
+                    kind: 'frontend_test',
+                    description: 'Test report from frontend test page',
+                    location: {
+                        lat: 28.6139,
+                        lng: 77.2090
+                    },
+                    reporterId: 'frontend_test_user',
+                    contact: 'test@frontend.com'
+                };
+                
+                const response = await fetch(`${API_BASE}/reports`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(testReport)
+                });
+                
+                const data = await response.json();
+                showResult('reportResult', data, response.ok);
+            } catch (error) {
+                showResult('reportResult', { error: error.message }, false);
+            }
+        }
+        
+        async function testGetReports() {
+            try {
+                const response = await fetch(`${API_BASE}/reports`);
+                const data = await response.json();
+                showResult('reportsResult', data, response.ok);
+            } catch (error) {
+                showResult('reportsResult', { error: error.message }, false);
+            }
+        }
+        
+        function testMapIntegration() {
+            try {
+                // Test if Leaflet is available
+                if (typeof L !== 'undefined') {
+                    showResult('mapResult', { 
+                        message: 'Leaflet is available',
+                        version: L.version 
+                    }, true);
+                } else {
+                    showResult('mapResult', { 
+                        message: 'Leaflet is not loaded',
+                        suggestion: 'This is expected if Leaflet CDN is not accessible'
+                    }, false);
+                }
+            } catch (error) {
+                showResult('mapResult', { error: error.message }, false);
+            }
+        }
+        
+        // Auto-run health check on page load
+        window.onload = function() {
+            testHealth();
+        };
+    </script>
+</body>
+</html>

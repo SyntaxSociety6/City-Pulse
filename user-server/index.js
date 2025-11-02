@@ -4,11 +4,30 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
+require('dotenv').config();
+
+// Define the MongoDB connection URI
+const userDbUri = process.env.DATABASE_URL;
+
+// Validate URI exists
+if (!userDbUri) {
+  throw new Error('DATABASE_URL environment variable is required. Add it to your .env file.');
+}
+
+// Connect to MongoDB
+mongoose.connect(userDbUri)
+  .then(() => console.log('Connected to User Database'))
+  .catch(err => {
+    console.error('MongoDB connection error:', err);
+    process.exit(1);
+  });
+
+
 const app = express();
 const PORT = process.env.PORT || 5000;
 
 // MongoDB Connection for User Database
-const userDbUri = "mongodb+srv://Sign-Up-Database:01234567890@sing-up-database.xel6ioo.mongodb.net/?retryWrites=true&w=majority&appName=Sing-Up-Database";
+console.log('DATABASE_URL', process.env.DATABASE_URL)
 
 mongoose.connect(userDbUri, { 
   useNewUrlParser: true, 

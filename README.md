@@ -1,135 +1,154 @@
-# 🏙️ CityPulse - Urban Growth & Infrastructure Tracker
+# 🏙️ City Pulse — Urban Data Visualization & Analysis Platform
 
-A comprehensive platform for monitoring urban development, traffic patterns, and infrastructure projects. Built with modern web technologies and designed for both citizens and city officials.
+A modern web application for **urban analytics**, **infrastructure monitoring**, and **real-time city insights**.
+Designed for both citizens and city officials to visualize, track, and understand urban growth trends.
 
-## 🌟 Features
+---
 
-- **Interactive City Maps** - Real-time traffic and infrastructure visualization
-- **Citizen Dashboard** - Report issues, view alerts, and track city projects
-- **Official Interface** - Comprehensive analytics and project management tools
-- **Real-time Updates** - Live data feeds and notifications
-- **Responsive Design** - Works on desktop, tablet, and mobile devices
+## 🚀 Quick Start
+
+### **Prerequisites**
+
+* Node.js (v18 or higher)
+* MongoDB (local or Atlas)
+* npm or yarn
+
+### **Installation**
+
+1. **Clone the repository**
+
+   ```bash
+   git clone https://github.com/yourusername/City-Pulse.git
+   cd City-Pulse
+   ```
+
+2. **Install dependencies**
+
+   ```bash
+   # Backend setup
+   cd backend
+   npm install
+
+   # Frontend setup
+   cd ../frontend
+   npm install
+   ```
+
+3. **Environment setup**
+
+   ```bash
+   # In backend directory
+   cp .env.example .env
+   # Update .env with your MongoDB URI, JWT secret, and other configs
+   ```
+
+4. **Run the application**
+
+   ```bash
+   # Start backend API server
+   cd backend
+   npm start
+
+   # Start frontend development server
+   cd ../frontend
+   npm run dev
+   ```
+
+5. Open your browser and visit: **[http://localhost:3000](http://localhost:3000)**
+
+---
 
 ## 🏗️ Project Structure
 
 ```
-citypulse-urban-growth-tracker/
-├── backend/                   # 🔧 Backend + Frontend projects
-│   ├── maps/
-│   │   ├── web/              # 🚀 Vite + React app (deployed to GitHub Pages)
-│   │   │   ├── src/
-│   │   │   └── dist/         # Build output published by Pages workflow
-│   │   ├── server/           # Map-related API (Express)
-│   │   └── mobile/           # Expo React Native app
-│   └── server/               # Core API (Express)
+City-Pulse/
+├── backend/             # Express.js server & API
+│   ├── models/          # MongoDB models
+│   ├── routes/          # REST API routes
+│   └── server.js        # Server entry point
 │
-├── archive/                  # Legacy static sites moved here (if present)
-├── .github/
-│   └── workflows/
-│       └── deploy.yml        # Automatic deployment to GitHub Pages
-├── package.json
-└── README.md
+├── frontend/            # React.js web app
+│   ├── public/          # Static assets
+│   └── src/             # Main application code
+│
+├── docs/                # Documentation
+└── .github/workflows/   # Deployment workflows
 ```
 
-## 🚀 Quick Start
+---
 
-### Prerequisites
-- Node.js (v18 or higher)
-- npm or yarn
+## 🛠️ Tech Stack
 
-### Installation
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/ayush/citypulse-urban-growth-tracker.git
-   cd citypulse-urban-growth-tracker
-   ```
+| Layer          | Technologies                                     |
+| -------------- | ------------------------------------------------ |
+| **Frontend**   | React.js, Vite, Tailwind CSS                     |
+| **Backend**    | Node.js, Express.js                              |
+| **Database**   | MongoDB Atlas                                    |
+| **Auth**       | JWT (JSON Web Tokens)                            |
+| **Deployment** | GitHub Pages (frontend), Render/Heroku (backend) |
 
-2. Install dependencies (root only needed for backend and tooling):
-   ```bash
-   npm install
-   ```
+---
 
-3. Start the frontend (Vite + React):
-   ```bash
-   cd backend/maps/web
-   npm ci
-   npm run dev
-   ```
+## 🌟 Features
 
-4. Open your browser and navigate to `http://localhost:3000`
+* 🗺️ **Interactive City Maps** — Real-time traffic & infrastructure visualization
+* 👥 **User & Official Dashboards** — Report issues, view analytics, manage projects
+* ⚡ **Data Visualization** — Graphs, charts, and dynamic city metrics
+* 🔐 **Secure Authentication** — JWT-based login system
+* 🔄 **Real-time Updates** — Live data feeds & notifications
+* 📱 **Responsive Design** — Optimized for all devices
+
+---
 
 ## 🌐 Deployment
 
-### GitHub Pages (Frontend)
-The Vite React app in `backend/maps/web` is deployed via GitHub Actions. On push to `main`, the workflow builds the app and publishes `backend/maps/web/dist` to Pages.
+### **Frontend (GitHub Pages)**
 
-- Push to `main`
-- Workflow: `.github/workflows/deploy.yml`
-- Output URL: `https://ayush.github.io/citypulse-urban-growth-tracker/`
+Automatically deployed via GitHub Actions from `frontend/dist`
+Workflow: `.github/workflows/deploy.yml`
 
-### Backend Deployment
-The backend can be deployed to:
-- Heroku
-- Render
-- Railway
-- Firebase Functions
-- Any Node.js hosting platform
+### **Backend**
 
-## 🛠️ Development
+Can be hosted on:
 
-### Available Scripts
-- Root: `npm start` (backend), `npm run dev` (backend dev)
-- Frontend (from `backend/maps/web`): `npm run dev`, `npm run build`, `npm run preview`
+* Render
+* Railway
+* Heroku
+* Firebase Functions
+* Any Node.js-compatible cloud platform
 
-### Adding New Features
-1. **Frontend**: Implement in `backend/maps/web/src` (Vite + React)
-2. **Backend**: Extend Express servers under `backend/server` or `backend/maps/server`
-3. **Database**: Configure MongoDB connection in backend files
-
-## 🔧 Configuration
-
-### Environment Variables
-Create a `.env` file in the backend directory:
-```env
-PORT=3000
-MONGODB_URI=your_mongodb_connection_string
-JWT_SECRET=your_jwt_secret
-```
-
-### Database Setup
-1. Set up MongoDB database
-2. Update connection string in backend configuration
-3. Run database migrations if needed
-
-## 📱 Frontend App
-
-The production site is the Vite app in `backend/maps/web`. Legacy static pages have been archived under `archive/`.
+---
 
 ## 🤝 Contributing
 
 1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
+2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🆘 Support
-
-If you encounter any issues:
-1. Check the [Troubleshooting Guide](TROUBLESHOOTING_SIGNUP.md)
-2. Review [System Status](SYSTEM_STATUS.md)
-3. Open an issue on GitHub
-
-## 🌟 Acknowledgments
-
-- Built for urban development and smart city initiatives
-- Designed with accessibility and user experience in mind
-- Powered by modern web technologies and real-time data
 
 ---
 
-**Made with ❤️ for better cities and communities**
+## 📄 License
+
+This project is licensed under the **MIT License** — see the [LICENSE](LICENSE) file for details.
+
+---
+
+## 👥 Team
+
+* **Ayush Kumar Singh** — Developer
+* Additional Contributors — Coming Soon
+
+---
+
+## 🙏 Acknowledgments
+
+* Built for **Smart City & Urban Development** initiatives
+* Inspired by open-source data visualization tools
+* Powered by **React**, **Express**, and **MongoDB**
+
+---
+
+**Made with ❤️ by Ayush Kumar Singh**
+*AI/ML + Automation Engineer | LangChain • AutoGen • Cloud AI • Full-Stack Intelligent Systems*

@@ -1,34 +1,19 @@
 const express = require('express');
+const mongoose = require('mongoose');
 const cors = require('cors');
-const path = require('path');
+require('dotenv').config();
 
 const app = express();
-const PORT = process.env.PORT || 3000;
 
-// Middleware
 app.use(cors());
 app.use(express.json());
 
-// Serve static files for the frontend
-app.use(express.static(path.join(__dirname, '../../frontend')));
+mongoose.connect(process.env.DATABASE_URL)
+    .then(() => console.log('Connected to MongoDB'))
+    .catch(err => console.error('MongoDB connection error:', err));
 
-// Health endpoint for this web server
-app.get('/health', (_req, res) => {
-  res.json({ ok: true });
-});
+const authRoutes = require('./routes/auth');
+app.use('/api/auth', authRoutes);
 
-// Serve main page
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '../../frontend/index.html'));
-});
-
-// Fallback to frontend index for unknown routes
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../../frontend/index.html'));
-});
-
-app.listen(PORT, () => {
-  console.log(`CityPulse web server running on http://localhost:${PORT}`);
-});
-
-module.exports = app;
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

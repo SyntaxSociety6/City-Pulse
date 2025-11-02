@@ -149,6 +149,3 @@ This project is licensed under the **MIT License** — see the [LICENSE](LICENSE
 * Powered by **React**, **Express**, and **MongoDB**
 
 ---
-
-**Made with ❤️ by Ayush Kumar Singh**
-*AI/ML + Automation Engineer | LangChain • AutoGen • Cloud AI • Full-Stack Intelligent Systems*

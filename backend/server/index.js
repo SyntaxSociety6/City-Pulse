@@ -3,19 +3,27 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+require('dotenv').config(); // Add this line at the top
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
 // MongoDB Connection for User Database
-const userDbUri = "mongodb+srv://Sign-Up-Database:01234567890@sing-up-database.xel6ioo.mongodb.net/?retryWrites=true&w=majority&appName=Sing-Up-Database";
+const DATABASE_URL = process.env.DATABASE_URL;
 
-mongoose.connect(userDbUri, { 
-  useNewUrlParser: true, 
-  useUnifiedTopology: true 
-})
-.then(() => console.log("✅ User Database Connected"))
-.catch(err => console.error("❌ User Database Error: ", err));
+if (!DATABASE_URL) {
+  console.error('❌ DATABASE_URL not found in environment variables');
+  process.exit(1);
+}
+
+console.log('📦 Connecting to MongoDB...');
+
+mongoose.connect(DATABASE_URL)
+  .then(() => console.log("✅ User Database Connected"))
+  .catch(err => {
+    console.error("❌ User Database Error: ", err);
+    process.exit(1);
+  });
 
 // User Schema
 const userSchema = new mongoose.Schema({

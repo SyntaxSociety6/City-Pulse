@@ -3,15 +3,26 @@ const cors = require('cors');
 const { nanoid } = require('nanoid');
 const mongoose = require('mongoose');
 
+require('dotenv').config();
+
+const uri = process.env.DATABASE_URL;
+
+if (!uri) {
+  throw new Error('Missing DATABASE_URL environment variable. Set DATABASE_URL in .env or your environment.');
+}
+
+mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => console.log('MongoDB connected'))
+  .catch(err => {
+    console.error('Mongo connection error:', err);
+    process.exit(1);
+  });
+
 const app = express();
 const PORT = process.env.PORT || 4000;
 
 // MongoDB Connection
-const uri = "mongodb+srv://City-Pulse:01234567890@city-pulse.4q6bd32.mongodb.net/?retryWrites=true&w=majority&appName=City-Pulse";
-
-mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => console.log("✅ MongoDB Connected"))
-  .catch(err => console.error("❌ MongoDB Error: ", err));
+console.log('DATABASE_URL', process.env.DATABASE_URL)
 
 // MongoDB Schema for Reports
 const reportSchema = new mongoose.Schema({

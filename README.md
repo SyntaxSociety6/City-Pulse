@@ -137,8 +137,10 @@ This project is licensed under the **MIT License** — see the [LICENSE](LICENSE
 
 ## 👥 Team
 
-* **Ayush Kumar Singh** — Developer
-* Additional Contributors — Coming Soon
+* Ayush Kumar Singh** — Developer
+* Harshit Prasad - Devloper 
+* Pranav Pratap - Devloper 
+* Arjun Yadav - Devloper 
 
 ---
 
